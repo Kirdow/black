@@ -61,6 +61,8 @@ namespace black
     {
         NOP,
         PUSH,
+        ADD,
+        SUB,
         LOG
     };
 
@@ -72,6 +74,8 @@ namespace black
         case OpType::NOP: return "NOP";
         case OpType::PUSH: return "PUSH";
         case OpType::LOG: return "LOG";
+        case OpType::ADD: return "ADD";
+        case OpType::SUB: return "SUB";
         default: return "UnknownOp";
         }
     }

@@ -56,6 +56,20 @@ namespace black
                 fs << "    pop rdi\n";
                 fs << "    call log\n";
                 break;
+            case OpType::ADD:
+                fs << "    ;; ADD\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    add rax, rdx\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::SUB:
+                fs << "    ;; SUB\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    sub rax, rdx\n";
+                fs << "    push rax\n";
+                break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");

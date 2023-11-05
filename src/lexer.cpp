@@ -16,35 +16,37 @@ namespace black
         for (size_t i = 0; i < s.length(); i++)
         {
             char c = s.at(i);
-            if (c == '-' && i == 0) continue;
+            if (c == '-' && i == 0 && s.length() > 1) continue;
             if (!std::isdigit(c)) return false;
         }
 
         return true;
     }
 
-    static std::vector<std::string> get_words(const std::string& source)
+    static std::vector<std::string> explode(const std::string& s, const std::string& delimiters)
     {
-        std::vector<std::string> words;
-        std::string word;
-        std::istringstream ts(source);
+        std::vector<std::string> result;
+        size_t current;
+        size_t next = -1;
 
-        while (std::getline(ts, word, ' '))
+        do
         {
-            strutil::trim(word);
-            if (word.empty()) continue;
-
-            words.push_back(word);
+            current = next + 1;
+            next = s.find_first_of(delimiters, current);
+            std::string str = s.substr(current, next - current);
+            if (str.empty()) continue;
+            result.push_back(str);
         }
+        while(next != std::string::npos);
 
-        return words;
+        return result;
     }
 
     std::vector<Token> lex_tokens(const std::string &source)
     {
         std::vector<Token> result;
 
-        std::vector<std::string> words = get_words(source);
+        std::vector<std::string> words = explode(source, " \t\b\r\n");
 
         size_t i = 0;
         for (const std::string& word : words)
@@ -93,6 +95,16 @@ namespace black
                 if ("." == sym)
                 {
                     result.push_back(Op::create(OpType::LOG));
+                    continue;
+                }
+                else if ("+" == sym)
+                {
+                    result.push_back(Op::create(OpType::ADD));
+                    continue;
+                }
+                else if ("-" == sym)
+                {
+                    result.push_back(Op::create(OpType::SUB));
                     continue;
                 }
                 else
