@@ -95,6 +95,66 @@ namespace black
                 fs << "    div rcx\n";
                 fs << "    push rdx\n";
                 break;
+            case OpType::LT:
+                fs << "    ;; LT\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    mov rbx, 1\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, rdx\n";
+                fs << "    cmovl rcx, rbx\n";
+                fs << "    push rcx\n";
+                break;
+            case OpType::GT:
+                fs << "    ;; GT\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    mov rbx, 1\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, rdx\n";
+                fs << "    cmovg rcx, rbx\n";
+                fs << "    push rcx\n";
+                break;
+            case OpType::LTE:
+                fs << "    ;; LTE\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    mov rbx, 1\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, rdx\n";
+                fs << "    cmovle rcx, rbx\n";
+                fs << "    push rcx\n";
+                break;
+            case OpType::GTE:
+                fs << "    ;; GTE\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    mov rbx, 1\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, rdx\n";
+                fs << "    cmovge rcx, rbx\n";
+                fs << "    push rcx\n";
+                break;
+            case OpType::EQ:
+                fs << "    ;; EQ\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    mov rbx, 1\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, rdx\n";
+                fs << "    cmove rcx, rbx\n";
+                fs << "    push rcx\n";
+                break;
+            case OpType::NEQ:
+                fs << "    ;; NEQ\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    mov rbx, 1\n";
+                fs << "    pop rdx\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, rdx\n";
+                fs << "    cmovne rcx, rbx\n";
+                fs << "    push rcx\n";
+                break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");

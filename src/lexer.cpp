@@ -104,6 +104,18 @@ namespace black
                     result.push_back(Op::create(OpType::DIV));
                 else if ("%" == sym)
                     result.push_back(Op::create(OpType::MOD));
+                else if ("<" == sym)
+                    result.push_back(Op::create(OpType::LT));
+                else if (">" == sym)
+                    result.push_back(Op::create(OpType::GT));
+                else if ("<=" == sym)
+                    result.push_back(Op::create(OpType::LTE));
+                else if (">=" == sym)
+                    result.push_back(Op::create(OpType::GTE));
+                else if ("=" == sym)
+                    result.push_back(Op::create(OpType::EQ));
+                else if ("!=" == sym)
+                    result.push_back(Op::create(OpType::NEQ));
                 else
                 {
                     throw_unexpected("Unexpected symbol: ", sym);

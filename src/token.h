@@ -66,6 +66,12 @@ namespace black
         MUL,
         DIV,
         MOD,
+        LT,
+        GT,
+        LTE,
+        GTE,
+        EQ,
+        NEQ,
         LOG
     };
 
@@ -81,6 +87,12 @@ namespace black
         case OpType::MUL: return "MUL";
         case OpType::DIV: return "DIV";
         case OpType::MOD: return "MOD";
+        case OpType::LT: return "LT";
+        case OpType::GT: return "GT";
+        case OpType::LTE: return "LTE";
+        case OpType::GTE: return "GTE";
+        case OpType::EQ: return "EQ";
+        case OpType::NEQ: return "NEQ";
         default: return "UnknownOp";
         }
     }
