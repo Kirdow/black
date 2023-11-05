@@ -75,7 +75,11 @@ namespace black
         LOG,
         IF,
         ELSE,
-        END
+        END,
+        DUP,
+        OVER,
+        SWAP,
+        DROP
     };
 
     static inline const char* op_name(OpType type)
@@ -99,6 +103,10 @@ namespace black
         case OpType::IF: return "IF";
         case OpType::ELSE: return "ELSE";
         case OpType::END: return "END";
+        case OpType::DUP: return "DUP";
+        case OpType::OVER: return "OVER";
+        case OpType::SWAP: return "SWAP";
+        case OpType::DROP: return "DROP";
         default: return "UnknownOp";
         }
     }

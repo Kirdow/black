@@ -171,6 +171,26 @@ namespace black
                 fs << "    ;; END\n";
                 fs << "    jmp addr_" << op.get_u64() << "\n";
                 break;
+            case OpType::DUP:
+                fs << "    ;; DUP\n";
+                fs << "    mov rax, [rsp]\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::OVER:
+                fs << "    ;; OVER\n";
+                fs << "    mov rax, [rsp+8]\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::SWAP:
+                fs << "    ;; SWAP\n";
+                fs << "    pop rax\n";
+                fs << "    xchg rax, [rsp]\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::DROP:
+                fs << "    ;; DROP\n";
+                fs << "    pop rax\n";
+                break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");

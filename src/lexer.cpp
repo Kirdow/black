@@ -149,6 +149,14 @@ namespace black
                     } else 
                         throw std::runtime_error("Unexpected end begin");
                 }
+                else if ("dup" == sym)
+                    result.push_back(Op::create(OpType::DUP));
+                else if ("over" == sym)
+                    result.push_back(Op::create(OpType::OVER));
+                else if ("swap" == sym)
+                    result.push_back(Op::create(OpType::SWAP));
+                else if ("drop" == sym)
+                    result.push_back(Op::create(OpType::DROP));
                 else
                     throw_unexpected("Unexpected symbol: ", sym);
             }
