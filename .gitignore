@@ -1,0 +1,11 @@
+# vim
+.vim
+
+# build
+build
+
+# files
+*.o
+*.asm
+test
+
