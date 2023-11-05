@@ -44,8 +44,10 @@ namespace black
 
         fs << "global _start\n";
         fs << "_start:\n";
+        uint64_t ptr = 0;
         for (const auto& op : operands)
         {
+            fs << "addr_" << ptr << ":\n";
             switch (op.Type)
             {
             case OpType::PUSH:
@@ -155,11 +157,29 @@ namespace black
                 fs << "    cmovne rcx, rbx\n";
                 fs << "    push rcx\n";
                 break;
+            case OpType::IF:
+                fs << "    ;; IF\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, 0\n";
+                fs << "    je addr_" << op.get_u64() << "\n";
+                break;
+            case OpType::ELSE:
+                fs << "    ;; ELSE\n";
+                fs << "    jmp addr_" << op.get_u64() << "\n";
+                break;
+            case OpType::END:
+                fs << "    ;; END\n";
+                fs << "    jmp addr_" << op.get_u64() << "\n";
+                break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");
             }
+
+            ++ptr;
         }
+
+        fs << "addr_" << ptr << ":\n";
 
         fs << "    mov rax, 60\n";
         fs << "    mov rdi, 0\n";

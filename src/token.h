@@ -72,7 +72,10 @@ namespace black
         GTE,
         EQ,
         NEQ,
-        LOG
+        LOG,
+        IF,
+        ELSE,
+        END
     };
 
     static inline const char* op_name(OpType type)
@@ -93,6 +96,9 @@ namespace black
         case OpType::GTE: return "GTE";
         case OpType::EQ: return "EQ";
         case OpType::NEQ: return "NEQ";
+        case OpType::IF: return "IF";
+        case OpType::ELSE: return "ELSE";
+        case OpType::END: return "END";
         default: return "UnknownOp";
         }
     }
@@ -109,6 +115,9 @@ namespace black
             switch (Type)
             {
             case OpType::PUSH: sstr << " " << get_u64(); break;
+            case OpType::IF: sstr << " " << get_u64(); break;
+            case OpType::ELSE: sstr << " " << get_u64(); break;
+            case OpType::END: sstr << " " << get_u64(); break;
             default: break;
             }
 
