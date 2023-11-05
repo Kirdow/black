@@ -93,20 +93,17 @@ namespace black
                 std::string sym = token.get_string();
 
                 if ("." == sym)
-                {
                     result.push_back(Op::create(OpType::LOG));
-                    continue;
-                }
                 else if ("+" == sym)
-                {
                     result.push_back(Op::create(OpType::ADD));
-                    continue;
-                }
                 else if ("-" == sym)
-                {
                     result.push_back(Op::create(OpType::SUB));
-                    continue;
-                }
+                else if ("*" == sym)
+                    result.push_back(Op::create(OpType::MUL));
+                else if ("/" == sym)
+                    result.push_back(Op::create(OpType::DIV));
+                else if ("%" == sym)
+                    result.push_back(Op::create(OpType::MOD));
                 else
                 {
                     throw_unexpected("Unexpected symbol: ", sym);

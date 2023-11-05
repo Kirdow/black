@@ -63,9 +63,11 @@ namespace black
         PUSH,
         ADD,
         SUB,
+        MUL,
+        DIV,
+        MOD,
         LOG
     };
-
 
     static inline const char* op_name(OpType type)
     {
@@ -76,20 +78,16 @@ namespace black
         case OpType::LOG: return "LOG";
         case OpType::ADD: return "ADD";
         case OpType::SUB: return "SUB";
+        case OpType::MUL: return "MUL";
+        case OpType::DIV: return "DIV";
+        case OpType::MOD: return "MOD";
         default: return "UnknownOp";
         }
     }
 
-#define PUSH(x) sstr << " " << (x); break
-#define PUSH64() PUSH(get_u64())
-#define PUSH32() PUSH(get_u32())
-#define PUSH8() PUSH(get_u8())
-#define PUSHS() PUSH(get_string())
-
     struct Op : public ValueType
     {
         OpType Type;
-
 
         inline std::string to_str() const
         {
@@ -98,7 +96,7 @@ namespace black
 
             switch (Type)
             {
-            case OpType::PUSH: PUSH64();
+            case OpType::PUSH: sstr << " " << get_u64(); break;
             default: break;
             }
 

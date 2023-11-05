@@ -1,4 +1,5 @@
 #include "compiler.h"
+#include "token.h"
 #include <fstream>
 #include <iostream>
 
@@ -69,6 +70,30 @@ namespace black
                 fs << "    pop rax\n";
                 fs << "    sub rax, rdx\n";
                 fs << "    push rax\n";
+                break;
+            case OpType::MUL:
+                fs << "    ;; MUL\n";
+                fs << "    xor rdx, rdx\n";
+                fs << "    pop rcx\n";
+                fs << "    pop rax\n";
+                fs << "    mul rcx\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::DIV:
+                fs << "    ;; DIV\n";
+                fs << "    xor rdx, rdx\n";
+                fs << "    pop rcx\n";
+                fs << "    pop rax\n";
+                fs << "    div rcx\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::MOD:
+                fs << "    ;; MOD\n";
+                fs << "    xor rdx, rdx\n";
+                fs << "    pop rcx\n";
+                fs << "    pop rax\n";
+                fs << "    div rcx\n";
+                fs << "    push rdx\n";
                 break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
