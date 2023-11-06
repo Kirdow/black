@@ -81,7 +81,10 @@ namespace black
         DUP,
         OVER,
         SWAP,
-        DROP
+        DROP,
+        MEM,
+        LOAD,
+        STORE
     };
 
     static inline const char* op_name(OpType type)
@@ -111,6 +114,9 @@ namespace black
         case OpType::OVER: return "OVER";
         case OpType::SWAP: return "SWAP";
         case OpType::DROP: return "DROP";
+        case OpType::MEM: return "MEM";
+        case OpType::LOAD: return "LOAD";
+        case OpType::STORE: return "STORE";
         default: return "UnknownOp";
         }
     }

@@ -175,6 +175,12 @@ namespace black
                     result.push_back(Op::create(OpType::SWAP));
                 else if ("drop" == sym)
                     result.push_back(Op::create(OpType::DROP));
+                else if ("store" == sym || "S" == sym)
+                    result.push_back(Op::create(OpType::STORE));
+                else if ("load" == sym || "L" == sym)
+                    result.push_back(Op::create(OpType::LOAD));
+                else if ("@" == sym)
+                    result.push_back(Op::create(OpType::MEM));
                 else
                     throw_unexpected("Unexpected symbol: ", sym);
             }

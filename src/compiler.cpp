@@ -8,6 +8,9 @@ namespace black
     void compile_program(const std::vector<Op>& operands, const std::string& filename)
     {
         std::ofstream fs(filename);
+        fs << "segment .data\n";
+        fs << "segment .bss\n";
+        fs << "    membuf  resb 640 * 1024\n";
         fs << "segment .text\n";
         fs << "log:\n";
         fs << "    mov     r9, -3689348814741910323\n";
@@ -199,6 +202,24 @@ namespace black
             case OpType::DROP:
                 fs << "    ;; DROP\n";
                 fs << "    pop rax\n";
+                break;
+            case OpType::MEM:
+                fs << "    ;; MEM U64\n";
+                fs << "    lea rax, [rel membuf]\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::LOAD:
+                fs << "    ;; LOAD\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    pop rax\n";
+                fs << "    mov cl, [rax]\n";
+                fs << "    push rcx\n";
+                break;
+            case OpType::STORE:
+                fs << "    ;; STORE\n";
+                fs << "    pop rax\n";
+                fs << "    pop rcx\n";
+                fs << "    mov [rax], cl\n";
                 break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
