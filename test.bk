@@ -1,4 +1,5 @@
-5 7 dup . . .
-5 7 over . . .
-5 7 swap . .
-5 7 drop .
+0 while dup 10 < do
+    dup .
+    1 +
+end
+drop

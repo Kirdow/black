@@ -133,6 +133,17 @@ namespace black
                     else
                         throw std::runtime_error("Unexpected else begin");
                 }
+                else if ("while" == sym)
+                {
+                    stack.push_back(ip);
+                    result.push_back(Op::create(OpType::WHILE));
+                }
+                else if ("do" == sym)
+                {
+                    uint64_t while_ip = stack.at(stack.size() - 1); stack.pop_back();
+                    stack.push_back(ip);
+                    result.push_back(Op::create_val<uint64_t>(OpType::DO, while_ip));
+                }
                 else if ("end" == sym)
                 {
                     uint64_t block_ip = stack.at(stack.size() - 1); stack.pop_back();
@@ -146,7 +157,14 @@ namespace black
                     {
                         op.Data = static_cast<uint64_t>(ip + 1);
                         result.push_back(Op::create_val<uint64_t>(OpType::END, ip + 1));
-                    } else 
+                    }
+                    else if (op.Type == OpType::DO)
+                    {
+                        uint64_t do_ip = op.get_u64();
+                        op.Data = static_cast<uint64_t>(ip + 1);
+                        result.push_back(Op::create_val<uint64_t>(OpType::END, do_ip));
+                    }
+                    else 
                         throw std::runtime_error("Unexpected end begin");
                 }
                 else if ("dup" == sym)

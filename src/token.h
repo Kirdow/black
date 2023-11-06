@@ -75,6 +75,8 @@ namespace black
         LOG,
         IF,
         ELSE,
+        WHILE,
+        DO,
         END,
         DUP,
         OVER,
@@ -102,6 +104,8 @@ namespace black
         case OpType::NEQ: return "NEQ";
         case OpType::IF: return "IF";
         case OpType::ELSE: return "ELSE";
+        case OpType::WHILE: return "WHILE";
+        case OpType::DO: return "DO";
         case OpType::END: return "END";
         case OpType::DUP: return "DUP";
         case OpType::OVER: return "OVER";
@@ -125,6 +129,7 @@ namespace black
             case OpType::PUSH: sstr << " " << get_u64(); break;
             case OpType::IF: sstr << " " << get_u64(); break;
             case OpType::ELSE: sstr << " " << get_u64(); break;
+            case OpType::DO: sstr << " " << get_u64(); break;
             case OpType::END: sstr << " " << get_u64(); break;
             default: break;
             }

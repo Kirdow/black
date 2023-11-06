@@ -167,6 +167,15 @@ namespace black
                 fs << "    ;; ELSE\n";
                 fs << "    jmp addr_" << op.get_u64() << "\n";
                 break;
+            case OpType::DO:
+                fs << "    ;; DO\n";
+                fs << "    pop rax\n";
+                fs << "    cmp rax, 0\n";
+                fs << "    je addr_" << op.get_u64() << "\n";
+                break;
+            case OpType::WHILE:
+                fs << "    ;; WHILE\n";
+                break;
             case OpType::END:
                 fs << "    ;; END\n";
                 fs << "    jmp addr_" << op.get_u64() << "\n";
