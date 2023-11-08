@@ -46,15 +46,9 @@ int main(int argc, char** argv)
     std::string filename_with_ext = argv[1];
     auto last_index = filename_with_ext.find_last_of('.');
     std::string filename = filename_with_ext.substr(0, last_index);
-    if (is_verbose) std::cout << "-- Reading source" << std::endl;
-    std::string source_file = read_file(filename_with_ext);
-    if (is_printsrc)
-    {
-        std::cout << "Source: \n" << source_file << std::endl;
-    }
     
     if (is_verbose) std::cout << "-- Creating tokens" << std::endl;
-    std::vector<black::Token> tokens = black::lex_tokens(source_file);
+    std::vector<black::Token> tokens = black::lex_tokens(filename);
     if (is_verbose) std::cout << "-- Creating operands" << std::endl;
     std::vector<black::Op> operands = black::lex_operands(tokens);
     if (is_verbose) std::cout << "-- Building executable" << std::endl;

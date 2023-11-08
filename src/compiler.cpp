@@ -1,7 +1,10 @@
 #include "compiler.h"
 #include "token.h"
+#include "errors.h"
+
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 namespace black
 {
@@ -10,6 +13,7 @@ namespace black
         std::ofstream fs(filename);
         fs << "segment .data\n";
         fs << "segment .bss\n";
+        fs << "    putsbuf resb 2\n";
         fs << "    membuf  resb 640 * 1024\n";
         fs << "segment .text\n";
         fs << "log:\n";
@@ -44,7 +48,18 @@ namespace black
         fs << "    syscall\n";
         fs << "    add     rsp, 40\n";
         fs << "    ret\n";
+        fs << "puts:\n";
+        fs << "    sub     rsp, 24\n";
+        fs << "    mov     edx, 1\n";
+        fs << "    mov     BYTE [rsp+12], dil\n";
+        fs << "    lea     rsi, [rsp+12]\n";
+        fs << "    mov     edi, 1\n";
+        fs << "    mov     rax, 1\n";
+        fs << "    syscall\n";
+        fs << "    add     rsp, 24\n";
+        fs << "    ret\n";
 
+        std::vector<std::string> strs;
         fs << "global _start\n";
         fs << "_start:\n";
         uint64_t ptr = 0;
@@ -54,8 +69,22 @@ namespace black
             switch (op.Type)
             {
             case OpType::PUSH:
-                fs << "    ;; PUSH " << op.get_u64() << "\n";
-                fs << "    push " << op.get_u64() << "\n";
+                if (op.is_value<uint64_t>())
+                {
+                    fs << "    ;; PUSH U64\n";
+                    fs << "    push " << op.get_u64() << "\n";
+                }
+                else if (op.is_value<std::string>())
+                {
+                    std::string str = op.get_string();
+                    fs << "    ;; PUSH str lit " << strs.size() << " \"" << str << "\":" << str.length() << "\n";
+                    fs << "    lea rax, [rel str_" << strs.size() << "]\n";
+                    fs << "    push rax\n";
+                    fs << "    push " << str.length() << "\n";
+                    strs.push_back(str);
+                }
+                else
+                    THROW_MESSAGE("Unexpected Push type");
                 break;
             case OpType::LOG:
                 fs << "    ;; LOG\n";
@@ -221,6 +250,29 @@ namespace black
                 fs << "    pop rcx\n";
                 fs << "    mov [rax], cl\n";
                 break;
+            case OpType::PUTS:
+                fs << "    ;; PUTS\n";
+                fs << ".L1:\n";
+                fs << "    xor rcx, rcx\n";
+                fs << "    mov rsi, [rsp+8]\n";
+                fs << "    lea rbx, [rsi]\n";
+                fs << "    mov cl, BYTE [rbx]\n";
+                fs << "    mov rdi, rcx\n";
+                fs << "    call puts\n";
+                fs << "    sub QWORD [rsp], 1\n";
+                fs << "    add QWORD [rsp+8], 1\n";
+                fs << "    mov rbx, [rsp]\n";
+                fs << "    test rbx, rbx\n";
+                fs << "    jg .L1\n";
+                if (op.get_i8() != 0)
+                {
+                    fs << "    xor rcx, rcx\n";
+                    fs << "    mov cl, 10\n";
+                    fs << "    mov rdi, rcx\n";
+                    fs << "    call puts\n";
+                }
+                fs << "    add rsp, 16\n";
+                break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");
@@ -234,6 +286,24 @@ namespace black
         fs << "    mov rax, 60\n";
         fs << "    mov rdi, 0\n";
         fs << "    syscall\n";
+
+        fs << "segment .data\n";
+        size_t idx = 0;
+        for (const auto& str : strs)
+        {
+            fs << ";; str lit " << idx << " \"" << str << "\":" << str.length() << "\n";
+            fs << "str_" << idx << ":\n";
+            fs << "    db ";
+            size_t idx1 = 0;
+            for (char c : str)
+            {
+                if (idx1++ > 0) fs << ", ";
+
+                fs << static_cast<uint64_t>(c);
+            }
+            fs << "\n";
+            ++idx;
+        }
     }
 
     void build_program(const std::vector<Op>& operands, const std::string& filename)

@@ -1,6 +1,8 @@
 #include "lexer.h"
 #include "token.h"
 #include "strutil.h"
+#include "source.h"
+#include "errors.h"
 
 #include <vector>
 #include <string>
@@ -23,58 +25,29 @@ namespace black
         return true;
     }
 
-    static std::vector<std::string> explode(const std::string& s, const std::string& delimiters)
+    static inline Token convert_string_to_token(const std::string& s)
     {
-        std::vector<std::string> result;
-        size_t current;
-        size_t next = -1;
+        if (s.find("\"") == 0 && s.rfind("\"") == s.length() - 1)
+            return Token::create_val(TokenType::TEXT, s.substr(1, s.length() - 2));
+        else if (s.find("'") == 0 && s.rfind("'") == s.length() - 1)
+            return Token::create_val(TokenType::CHAR, s.at(1));
+        else if (is_number(s))
+            return Token::create_val(TokenType::NUM, static_cast<uint64_t>(std::stoi(s)));
+        return Token::create_val(TokenType::SYM, s);
 
-        do
-        {
-            current = next + 1;
-            next = s.find_first_of(delimiters, current);
-            std::string str = s.substr(current, next - current);
-            if (str.empty()) continue;
-            result.push_back(str);
-        }
-        while(next != std::string::npos);
-
-        return result;
     }
 
-    std::vector<Token> lex_tokens(const std::string &source)
+    std::vector<Token> lex_tokens(const std::filesystem::path& filepath)
     {
+        std::string name = filepath.filename();
+        std::vector<std::string> source_code = load_code(filepath.parent_path() / (name + ".bk"));
         std::vector<Token> result;
-
-        std::vector<std::string> words = explode(source, " \t\b\r\n");
-
-        size_t i = 0;
-        for (const std::string& word : words)
+        for (const std::string& word : source_code)
         {
-            Token token;
-            if (is_number(word))
-            {
-                token.Type = TokenType::NUM;
-                token.Data = static_cast<uint64_t>(std::stoi(word));
-            }
-            else
-            {
-                token.Type = TokenType::SYM;
-                token.Data = word;
-            }
-
-            result.push_back(token);
+            result.push_back(convert_string_to_token(word));
         }
 
         return result;
-    }
-
-    template<typename T>
-    static void throw_unexpected(const char* message, const T& expected)
-    {
-        std::stringstream sstr;
-        sstr << message << expected;
-        throw std::runtime_error(sstr.str());
     }
 
     std::vector<Op> lex_operands(const std::vector<Token>& tokens)
@@ -86,7 +59,11 @@ namespace black
         for (const auto& token : tokens)
         {
             if (token.Type == TokenType::NUM)
-                result.push_back(Op::create_val(OpType::PUSH, token.get_u64()));
+                result.push_back(Op::create_val<uint64_t>(OpType::PUSH, token.get_u64()));
+            else if (token.Type == TokenType::TEXT)
+                result.push_back(Op::create_val<std::string>(OpType::PUSH, token.get_string()));
+            else if (token.Type == TokenType::CHAR)
+                result.push_back(Op::create_val<uint64_t>(OpType::PUSH, static_cast<uint64_t>(static_cast<uint8_t>(token.get_i8()))));
             else if (token.Type == TokenType::SYM)
             {
                 std::string sym = token.get_string();
@@ -181,11 +158,15 @@ namespace black
                     result.push_back(Op::create(OpType::LOAD));
                 else if ("@" == sym)
                     result.push_back(Op::create(OpType::MEM));
+                else if ("P" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::PUTS, true));
+                else if ("p" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::PUTS, false));
                 else
-                    throw_unexpected("Unexpected symbol: ", sym);
+                    THROW_UNEXPECTED("Unexpected symbol: ", sym);
             }
             else
-                throw_unexpected("Unexpected token: ", TokenName(token.Type));
+                THROW_UNEXPECTED("Unexpected token: ", token_name(token.Type));
 
             ++ip;
         }

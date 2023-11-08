@@ -12,16 +12,18 @@ namespace black
         NONE,
         NUM,
         TEXT,
-        SYM
+        SYM,
+        CHAR
     };
 
-    static inline const char* TokenName(TokenType type)
+    static inline const char* token_name(TokenType type)
     {
         switch (type)
         {
         case TokenType::NUM: return "NUM";
         case TokenType::TEXT: return "TEXT";
         case TokenType::SYM: return "SYM";
+        case TokenType::CHAR: return "CHAR";
         case TokenType::NONE: return "NONE";
         default: return "UnknownType";
         }
@@ -29,7 +31,7 @@ namespace black
 
     struct ValueType
     {
-        std::variant<std::string, uint64_t, uint8_t> Data;
+        std::variant<std::string, uint64_t, int8_t> Data;
 
         inline std::string get_string() const
         {
@@ -46,15 +48,52 @@ namespace black
             return static_cast<uint32_t>(get_u64());
         }
 
-        inline uint8_t get_u8() const
+        inline int8_t get_i8() const
         {
-            return std::get<uint8_t>(Data);
+            return std::get<int8_t>(Data);
+        }
+
+        template<typename T>
+        inline bool is_value() const
+        {
+            return std::holds_alternative<T>(Data);
         }
     };
 
     struct Token : public ValueType
     {
         TokenType Type;
+
+        inline std::string to_str() const
+        {
+            std::stringstream sstr;
+            sstr << token_name(Type);
+
+            switch (Type)
+            {
+            case TokenType::SYM: sstr << " (" << get_string() << ")"; break;
+            case TokenType::TEXT: sstr << " \"" << get_string() << "\""; break;
+            case TokenType::NUM: sstr << " " << get_u64(); break;
+            case TokenType::CHAR: sstr << " '" << get_i8() << "'"; break;
+            default: break;
+            }
+
+            return sstr.str();
+        }
+        static inline Token create(TokenType type)
+        {
+            Token token;
+            token.Type = type;
+            return token;
+        }
+
+        template<typename T>
+        static inline Token create_val(TokenType type, const T& value)
+        {
+            Token token = create(type);
+            token.Data = value;
+            return token;
+        }
     };
 
     enum class OpType
@@ -84,7 +123,8 @@ namespace black
         DROP,
         MEM,
         LOAD,
-        STORE
+        STORE,
+        PUTS
     };
 
     static inline const char* op_name(OpType type)
@@ -117,6 +157,7 @@ namespace black
         case OpType::MEM: return "MEM";
         case OpType::LOAD: return "LOAD";
         case OpType::STORE: return "STORE";
+        case OpType::PUTS: return "PUTS";
         default: return "UnknownOp";
         }
     }
@@ -137,6 +178,7 @@ namespace black
             case OpType::ELSE: sstr << " " << get_u64(); break;
             case OpType::DO: sstr << " " << get_u64(); break;
             case OpType::END: sstr << " " << get_u64(); break;
+            case OpType::PUTS: sstr << " " << (get_i8() != 0 ? "true" : "false"); break;
             default: break;
             }
 
