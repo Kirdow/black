@@ -1,4 +1,3 @@
-inc std
 inc asserts
 
 "Add numbers from 0 to (including) 9" P

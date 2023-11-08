@@ -1,0 +1,3 @@
+macro 2dup over over end
+macro str(bool) if "true" else "false" end end
+macro sizeof(str) swap drop end

@@ -31,8 +31,8 @@ namespace black
     static std::filesystem::path get_file_name(const std::filesystem::path& filepath, const std::string& name)
     {
         if (std::filesystem::exists(filepath.parent_path() / name)) return filepath.parent_path() / name;
-        if (std::filesystem::exists(s_ParentDir / name)) return s_ParentDir / name;
-        return s_ParentDir.parent_path() / name;
+        std::filesystem::path std_dir = s_ParentDir.parent_path() / "std";
+        return std_dir / name;
     }
 
     static inline std::string load_code_file(const std::filesystem::path& filepath, std::unordered_set<std::filesystem::path>& filemap)

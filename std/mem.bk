@@ -1,0 +1,6 @@
+macro @mem @ end
+macro @io @ 90000 + end
+macro @str @ 100000 + end
+macro @int @ 110000 + end
+
+

@@ -1,4 +1,4 @@
-inc std
+inc io
 
 macro @_assert @ 639999 + end
 macro assert:vlog(unset) 1 @_assert S end
@@ -26,7 +26,7 @@ end
 macro assert:log(success)
     over -
     dup if
-        "Successful tests: " p
+        "Successful tasks: " p
         dup .
     end
     drop
@@ -35,3 +35,4 @@ macro assert:log()
     over assert:log(failed) drop
     assert:log(success)
 end
+

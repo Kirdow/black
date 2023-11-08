@@ -1,14 +1,17 @@
-macro 2dup over over end
-macro str(bool) if "true" else "false" end end
-macro sizeof(str) swap drop end
+inc mem
 
-macro @mem @ end
-macro @io @ 90000 + end
-macro @str @ 100000 + end
-macro @int @ 110000 + end
+macro STDIN 0 end
+macro STDOUT 1 end
+macro STDERR 2 end
+
+macro SYS_WRITE 1 end
+
+macro write
+    STDOUT SYS_WRITE syscall3
+end
 
 macro p
-    swap 1 1 syscall3
+    swap write
 end
 
 macro iprint
@@ -38,3 +41,4 @@ macro write(str) p end
 macro write(int) iprint end
 macro print(str) write(str) endl end
 macro print(int) write(int) endl end
+
