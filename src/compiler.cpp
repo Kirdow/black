@@ -275,6 +275,28 @@ namespace black
                 }
                 fs << "    add rsp, 16\n";
                 break;
+            case OpType::SYSCALL:
+                {
+                    int8_t sys_nr = op.get_i8();
+                    fs << "    ;; SYSCALL" << sys_nr << "\n";
+                    fs << "    pop rax\n";
+                    if (sys_nr >= 1)
+                        fs << "    pop rdi\n";
+                    if (sys_nr >= 2)
+                        fs << "    pop rsi\n";
+                    if (sys_nr >= 3)
+                        fs << "    pop rdx\n";
+                    if (sys_nr >= 4)
+                        fs << "    pop r10\n";
+                    if (sys_nr >= 5)
+                        fs << "    pop r8\n";
+                    if (sys_nr >= 6)
+                        fs << "    pop r9\n";
+                    if (sys_nr > 6)
+                        std::cout << "WARNING: Unsupported Syscall Id: " << sys_nr << std::endl;
+                    fs << "    syscall\n";
+                    break;
+                }
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");

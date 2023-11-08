@@ -124,6 +124,7 @@ namespace black
         MEM,
         LOAD,
         STORE,
+        SYSCALL,
         PUTS
     };
 
@@ -157,6 +158,7 @@ namespace black
         case OpType::MEM: return "MEM";
         case OpType::LOAD: return "LOAD";
         case OpType::STORE: return "STORE";
+        case OpType::SYSCALL: return "SYSCALL";
         case OpType::PUTS: return "PUTS";
         default: return "UnknownOp";
         }

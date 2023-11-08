@@ -162,6 +162,18 @@ namespace black
                     result.push_back(Op::create_val<int8_t>(OpType::PUTS, true));
                 else if ("p" == sym)
                     result.push_back(Op::create_val<int8_t>(OpType::PUTS, false));
+                else if ("syscall1" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 1));
+                else if ("syscall2" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 2));
+                else if ("syscall3" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 3));
+                else if ("syscall4" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 4));
+                else if ("syscall5" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 5));
+                else if ("syscall6" == sym)
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 6));
                 else
                     THROW_UNEXPECTED("Unexpected symbol: ", sym);
             }
