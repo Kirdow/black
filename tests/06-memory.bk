@@ -1,0 +1,20 @@
+"Store ABC in memory and print it" P
+65 @ 0 + S
+66 @ 1 + S
+67 @ 2 + S
+
+@ 0 + 3 P
+"Above test is visual and can't be tested." P
+"Let's take the test 05-loops but store the" P
+" value in mem[10]." P
+
+0 @ 10 + S
+0 while dup 10 < do
+    dup @ 10 + L +
+    @ 10 + S
+    1 +
+end
+drop
+"Result: " p @ 10 + L .
+"Expected: 45" P
+@ 10 + L 45 != +

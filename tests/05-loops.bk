@@ -1,0 +1,11 @@
+"Add numbers from 0 to (including) 9" P
+
+0 0 while dup 10 < do
+    swap over + swap
+    1 +
+end
+drop
+"Result: " p dup .
+"Expected: 45" P
+45 != +
+

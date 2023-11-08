@@ -1,0 +1,36 @@
+7 5 +
+"Expected: 12" P
+"Result: " p dup .
+12 != +
+
+7 5 -
+"Expected: 2" P
+"Result: " p dup .
+2 != +
+
+7 5 *
+"Expected: 35" P
+"Result: " p dup .
+35 != +
+
+7 5 /
+"Expected: 1" P
+"Result: " p dup .
+1 != +
+
+7 5 %
+"Expected: 2" P
+"Result: " p dup .
+2 != +
+
+dup 0 != if
+    "Failed tests: " p
+    dup .
+end
+
+dup 5 swap -
+dup 0 != if
+    "Successful tests: " p
+    dup .
+end
+drop

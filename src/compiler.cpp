@@ -62,6 +62,8 @@ namespace black
         std::vector<std::string> strs;
         fs << "global _start\n";
         fs << "_start:\n";
+        fs << "    ;; Push 0 to act as return code\n";
+        fs << "    push 0\n";
         uint64_t ptr = 0;
         for (const auto& op : operands)
         {
@@ -284,7 +286,7 @@ namespace black
         fs << "addr_" << ptr << ":\n";
 
         fs << "    mov rax, 60\n";
-        fs << "    mov rdi, 0\n";
+        fs << "    pop rdi\n";
         fs << "    syscall\n";
 
         fs << "segment .data\n";
@@ -321,12 +323,14 @@ namespace black
         std::system(command.c_str());
     }
 
-    void run_program(const std::string& filename)
+    int run_program(const std::string& filename)
     {
         std::stringstream sstr;
         sstr << "./" << filename;
         std::string command = sstr.str();
         std::cout << "] " << command << std::endl;
-        std::system(command.c_str());
+        int status = std::system(command.c_str());
+        if (status < 0 || !WIFEXITED(status)) return -1;
+        return WEXITSTATUS(status);
     }
 }

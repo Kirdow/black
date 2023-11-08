@@ -1,0 +1,73 @@
+"Testing against 5 7, 7 7 and 9 7" P
+
+"Testing <" P
+5 7 <
+1 != +
+
+7 7 <
+0 != +
+
+9 7 <
+0 != +
+
+"Testing >" P
+5 7 >
+0 != +
+
+7 7 >
+0 != +
+
+9 7 >
+1 != +
+
+"Testing <=" P
+5 7 <=
+1 != +
+
+7 7 <=
+1 != +
+
+9 7 <=
+0 != +
+
+"Testing >=" P
+5 7 >=
+0 != +
+
+7 7 >=
+1 != +
+
+9 7 >=
+1 != +
+
+"Testing =" P
+5 7 =
+0 != +
+
+7 7 =
+1 != +
+
+9 7 =
+0 != +
+
+"Testing !=" P
+5 7 !=
+1 != +
+
+7 7 !=
+0 != +
+
+9 7 !=
+1 != +
+
+dup 0 != if
+    "Failed tests: " p
+    dup .
+end
+
+dup 18 swap -
+dup 0 != if
+    "Succesful tests: " p
+    dup .
+end
+drop

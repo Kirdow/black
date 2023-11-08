@@ -1,0 +1,27 @@
+"Should only print true" P
+
+1 if
+    "true" P
+    0 +
+end
+
+0 if
+    "false" P
+    1 +
+end
+
+1 if
+    "true" P
+    0 +
+else
+    "false" P
+    1 +
+end
+
+0 if
+    "false" P
+    1 +
+else
+    "true" P
+    0 +
+end

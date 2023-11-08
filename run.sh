@@ -4,6 +4,9 @@
 is_clean=false
 is_clear=false
 
+filename=test.bk
+next_file=false
+
 argv=
 # Iterate over arguments
 for arg in "$@"; do
@@ -14,23 +17,30 @@ for arg in "$@"; do
         --silent-build)
             is_clear=true
             ;;
+        --file)
+            next_file=true
+            ;;
         *)
-            argv="$argv $arg"
+            if $next_file; then
+                filename="$arg"
+                next_file=false
+            else
+                argv="$argv $arg"
+            fi
             ;;
     esac
 done
 
 # Check if arguments contains "clean"
 if $is_clean; then
-    # Print cleanup step
-    echo Cleanup before build
+    if ! $is_clear; then
+        # Print cleanup step
+        echo Cleanup before build
+    fi
 
     # Cleanup here
     rm -rf build
 fi
-
-# Exit the script if anything fails
-set -e
 
 # Create build/ if not exist
 if [ ! -d "build/" ]; then
@@ -58,5 +68,5 @@ else
 fi
 
 # Run the program
-./build/black test.bk $argv
-
+./build/black $filename $argv
+exit $?

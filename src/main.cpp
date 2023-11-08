@@ -54,9 +54,7 @@ int main(int argc, char** argv)
     if (is_verbose) std::cout << "-- Building executable" << std::endl;
     black::build_program(operands, filename);
     if (is_verbose) std::cout << "-- Running program" << std::endl;
-    black::run_program(filename);
-    
-    return 0;
+    return black::run_program(filename);
 }
 
 std::string read_file(const std::string& filename)
