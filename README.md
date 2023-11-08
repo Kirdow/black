@@ -1,5 +1,7 @@
-# Black
-![Black](/res/logo.png "Black")
+# Black [![License](https://img.shields.io/github/license/Kirdow/black.svg)](https://github.com/Kirdow/black/blob/master/LICENSE)
+
+![Black](/res/logo480.png "Black")
+
 Stack based programming language made with C++17. Based on my previous project in Rust [Ktnack](https://github.com/Kirdow/Ktnack) which was based on [Tsoding/Porth](https://gitlab.com/tsoding/porth).
 
 ## Building & Running
