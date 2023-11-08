@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <unordered_set>
 #include <vector>
 #include "strutil.h"
 
@@ -34,8 +35,11 @@ namespace black
         return s_ParentDir.parent_path() / name;
     }
 
-    static inline std::string load_code_file(const std::filesystem::path& filepath)
+    static inline std::string load_code_file(const std::filesystem::path& filepath, std::unordered_set<std::filesystem::path>& filemap)
     {
+        std::filesystem::path absolute = std::filesystem::absolute(filepath);
+        if (filemap.find(absolute) != filemap.end()) return "";
+        filemap.insert(absolute);
         std::istringstream input(read_file(filepath));
         std::stringstream result;
 
@@ -45,7 +49,7 @@ namespace black
             {
                 std::stringstream sstr;
                 sstr << line.substr(4) << ".bk";
-                std::string sub_text = load_code_file(get_file_name(filepath, sstr.str()));
+                std::string sub_text = load_code_file(get_file_name(filepath, sstr.str()), filemap);
                 result << " " << sub_text;
             }
             else
@@ -80,7 +84,8 @@ namespace black
 
     std::vector<std::string> load_code(const std::filesystem::path& filepath)
     {
-        std::string text = load_code_file(filepath);
+        std::unordered_set<std::filesystem::path> filemap;
+        std::string text = load_code_file(filepath, filemap);
         std::vector<std::string> code_tokens = get_code_words_and_strings(text);
         return code_tokens;
     }
