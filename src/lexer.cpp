@@ -266,10 +266,10 @@ namespace black
                     result.push_back(Op::create(OpType::LOAD));
                 else if ("@" == sym)
                     result.push_back(Op::create(OpType::MEM));
-                else if ("P" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::PUTS, true));
-                else if ("p" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::PUTS, false));
+                //else if ("P" == sym)
+                //    result.push_back(Op::create_val<int8_t>(OpType::PUTS, true));
+                //else if ("p" == sym)
+                //    result.push_back(Op::create_val<int8_t>(OpType::PUTS, false));
                 else if ("syscall1" == sym)
                     result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 1));
                 else if ("syscall2" == sym)

@@ -1,3 +1,5 @@
+inc ../std
+
 "Store ABC in memory and print it" P
 65 @ 0 + S
 66 @ 1 + S
