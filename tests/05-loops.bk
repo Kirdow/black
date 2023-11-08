@@ -1,4 +1,4 @@
-inc ../std
+inc std
 
 "Add numbers from 0 to (including) 9" P
 

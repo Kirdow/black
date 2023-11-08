@@ -2,6 +2,7 @@
 #include "lexer.h"
 #include "token.h"
 #include <exception>
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -12,6 +13,8 @@
 
 std::string read_file(const std::string& filename);
 
+std::filesystem::path s_ParentDir;
+
 int main(int argc, char** argv)
 {
     if (argc < 2)
@@ -20,6 +23,9 @@ int main(int argc, char** argv)
 
         return EXIT_FAILURE;
     }
+
+    std::filesystem::path current_path = argv[0];
+    s_ParentDir = current_path.parent_path();
 
     std::stringstream argstr;
 

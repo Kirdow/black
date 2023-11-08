@@ -1,4 +1,4 @@
-inc ../std
+inc std
 
 "Should only print true" P
 

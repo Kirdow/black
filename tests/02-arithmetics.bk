@@ -1,4 +1,4 @@
-inc ../std
+inc std
 
 7 5 +
 "Expected: 12" P

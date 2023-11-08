@@ -1,4 +1,4 @@
-inc ../std
+inc std
 
 "Testing against 5 7, 7 7 and 9 7" P
 

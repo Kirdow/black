@@ -1,9 +1,12 @@
 #include "source.h"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include "strutil.h"
+
+extern std::filesystem::path s_ParentDir;
 
 namespace black
 {
@@ -24,6 +27,13 @@ namespace black
         return result;
     }
 
+    static std::filesystem::path get_file_name(const std::filesystem::path& filepath, const std::string& name)
+    {
+        if (std::filesystem::exists(filepath.parent_path() / name)) return filepath.parent_path() / name;
+        if (std::filesystem::exists(s_ParentDir / name)) return s_ParentDir / name;
+        return s_ParentDir.parent_path() / name;
+    }
+
     static inline std::string load_code_file(const std::filesystem::path& filepath)
     {
         std::istringstream input(read_file(filepath));
@@ -35,7 +45,7 @@ namespace black
             {
                 std::stringstream sstr;
                 sstr << line.substr(4) << ".bk";
-                std::string sub_text = load_code_file(filepath.parent_path() / sstr.str());
+                std::string sub_text = load_code_file(get_file_name(filepath, sstr.str()));
                 result << " " << sub_text;
             }
             else
