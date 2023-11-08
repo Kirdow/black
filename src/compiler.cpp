@@ -131,6 +131,35 @@ namespace black
                 fs << "    div rcx\n";
                 fs << "    push rdx\n";
                 break;
+            case OpType::SHL:
+                fs << "    ;; SHL\n";
+                fs << "    pop rcx\n";
+                fs << "    sal QWORD [rsp], cl\n";
+                break;
+            case OpType::SHR:
+                fs << "    ;; SHR\n";
+                fs << "    pop rcx\n";
+                fs << "    shr QWORD [rsp], cl\n";
+                break;
+            case OpType::BAND:
+                fs << "    ;; BAND\n";
+                fs << "    pop rcx\n";
+                fs << "    and QWORD [rsp], rcx\n";
+                break;
+            case OpType::BOR:
+                fs << "    ;; BOR\n";
+                fs << "    pop rcx\n";
+                fs << "    or QWORD [rsp], rcx\n";
+                break;
+            case OpType::BXOR:
+                fs << "    ;; BXOR\n";
+                fs << "    pop rcx\n";
+                fs << "    xor QWORD [rsp], rcx\n";
+                break;
+            case OpType::BNOT:
+                fs << "    ;; BNOT\n";
+                fs << "    not QWORD [rsp]\n";
+                break;
             case OpType::LT:
                 fs << "    ;; LT\n";
                 fs << "    xor rcx, rcx\n";
@@ -190,6 +219,34 @@ namespace black
                 fs << "    cmp rax, rdx\n";
                 fs << "    cmovne rcx, rbx\n";
                 fs << "    push rcx\n";
+                break;
+            case OpType::LAND:
+                fs << "    ;; LAND\n";
+                fs << "    pop rsi\n";
+                fs << "    pop rdi\n";
+                fs << "    test rdi, rdi\n";
+                fs << "    setne dl\n";
+                fs << "    xor rax, rax\n";
+                fs << "    test rsi, rsi\n";
+                fs << "    setne al\n";
+                fs << "    and rax, rdx\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::LOR:
+                fs << "    ;; LOR\n";
+                fs << "    xor rax, rax\n";
+                fs << "    pop rsi\n";
+                fs << "    pop rdi\n";
+                fs << "    or rdi, rsi\n";
+                fs << "    setne al\n";
+                fs << "    push rax\n";
+                break;
+            case OpType::LNOT:
+                fs << "    ;; LNOT\n";
+                fs << "    xor rax, rax\n";
+                fs << "    cmp QWORD [rsp], 0\n";
+                fs << "    sete al\n";
+                fs << "    mov QWORD [rsp], rax\n";
                 break;
             case OpType::IF:
                 fs << "    ;; IF\n";

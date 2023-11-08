@@ -105,6 +105,12 @@ namespace black
         MUL,
         DIV,
         MOD,
+        SHL,
+        SHR,
+        BAND,
+        BOR,
+        BXOR,
+        BNOT,
         LT,
         GT,
         LTE,
@@ -112,6 +118,9 @@ namespace black
         EQ,
         NEQ,
         LOG,
+        LAND,
+        LOR,
+        LNOT,
         IF,
         ELSE,
         WHILE,
@@ -140,12 +149,21 @@ namespace black
         case OpType::MUL: return "MUL";
         case OpType::DIV: return "DIV";
         case OpType::MOD: return "MOD";
+        case OpType::SHL: return "SHL";
+        case OpType::SHR: return "SHR";
+        case OpType::BAND: return "BAND";
+        case OpType::BOR: return "BOR";
+        case OpType::BXOR: return "BXOR";
+        case OpType::BNOT: return "BNOT";
         case OpType::LT: return "LT";
         case OpType::GT: return "GT";
         case OpType::LTE: return "LTE";
         case OpType::GTE: return "GTE";
         case OpType::EQ: return "EQ";
         case OpType::NEQ: return "NEQ";
+        case OpType::LAND: return "LAND";
+        case OpType::LOR: return "LOR";
+        case OpType::LNOT: return "LNOT";
         case OpType::IF: return "IF";
         case OpType::ELSE: return "ELSE";
         case OpType::WHILE: return "WHILE";

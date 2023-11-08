@@ -1,4 +1,5 @@
 inc std
+inc asserts
 
 "Store ABC in memory and print it" P
 65 @ 0 + S
@@ -17,6 +18,4 @@ inc std
     1 +
 end
 drop
-"Result: " p @ 10 + L .
-"Expected: 45" P
-@ 10 + L 45 != +
+@ 10 + L 45 assert(=)

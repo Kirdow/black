@@ -1,75 +1,67 @@
 inc std
+inc asserts
+assert:vlog(unset)
 
 "Testing against 5 7, 7 7 and 9 7" P
 
 "Testing <" P
 5 7 <
-1 != +
+1 assert(=)
 
 7 7 <
-0 != +
+0 assert(=)
 
 9 7 <
-0 != +
+0 assert(=)
 
 "Testing >" P
 5 7 >
-0 != +
+0 assert(=)
 
 7 7 >
-0 != +
+0 assert(=)
 
 9 7 >
-1 != +
+1 assert(=)
 
 "Testing <=" P
 5 7 <=
-1 != +
+1 assert(=)
 
 7 7 <=
-1 != +
+1 assert(=)
 
 9 7 <=
-0 != +
+0 assert(=)
 
 "Testing >=" P
 5 7 >=
-0 != +
+0 assert(=)
 
 7 7 >=
-1 != +
+1 assert(=)
 
 9 7 >=
-1 != +
+1 assert(=)
 
 "Testing =" P
 5 7 =
-0 != +
+0 assert(=)
 
 7 7 =
-1 != +
+1 assert(=)
 
 9 7 =
-0 != +
+0 assert(=)
 
 "Testing !=" P
 5 7 !=
-1 != +
+1 assert(=)
 
 7 7 !=
-0 != +
+0 assert(=)
 
 9 7 !=
-1 != +
+1 assert(=)
 
-dup 0 != if
-    "Failed tests: " p
-    dup .
-end
-
-dup 18 swap -
-dup 0 != if
-    "Succesful tests: " p
-    dup .
-end
-drop
+18 assert:log()

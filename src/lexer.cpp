@@ -188,6 +188,18 @@ namespace black
                     result.push_back(Op::create(OpType::DIV));
                 else if ("%" == sym)
                     result.push_back(Op::create(OpType::MOD));
+                else if ("<<" == sym)
+                    result.push_back(Op::create(OpType::SHL));
+                else if (">>" == sym)
+                    result.push_back(Op::create(OpType::SHR));
+                else if ("&" == sym)
+                    result.push_back(Op::create(OpType::BAND));
+                else if ("|" == sym)
+                    result.push_back(Op::create(OpType::BOR));
+                else if ("^" == sym)
+                    result.push_back(Op::create(OpType::BXOR));
+                else if ("~" == sym)
+                    result.push_back(Op::create(OpType::BNOT));
                 else if ("<" == sym)
                     result.push_back(Op::create(OpType::LT));
                 else if (">" == sym)
@@ -196,6 +208,12 @@ namespace black
                     result.push_back(Op::create(OpType::LTE));
                 else if (">=" == sym)
                     result.push_back(Op::create(OpType::GTE));
+                else if ("&&" == sym)
+                    result.push_back(Op::create(OpType::LAND));
+                else if ("||" == sym)
+                    result.push_back(Op::create(OpType::LOR));
+                else if ("!" == sym)
+                    result.push_back(Op::create(OpType::LNOT));
                 else if ("=" == sym)
                     result.push_back(Op::create(OpType::EQ));
                 else if ("!=" == sym)

@@ -1,4 +1,5 @@
 inc std
+inc asserts
 
 "Should only print true" P
 
@@ -27,3 +28,5 @@ else
     "true" P
     0 +
 end
+
+3 assert:log()

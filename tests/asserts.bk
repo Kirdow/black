@@ -1,0 +1,35 @@
+macro @_assert @ 639999 + end
+macro assert:vlog(unset) 1 @_assert S end
+macro assert:vlog(set) 0 @_assert S end
+macro assert:vlog() @_assert L end
+macro assert ! + end
+macro _assert
+    assert:vlog() ! if
+        dup "Expected: " p .
+        over "Result: " p .
+    end
+end
+macro assert(=) _assert = assert end
+macro assert(!=) _assert != assert end
+macro assert(<) _assert < assert end
+macro assert(>) _assert > assert end
+macro assert(<=) _assert <= assert end
+macro assert(>=) _assert >= assert end
+macro assert:log(failed)
+    dup if
+        "Failed tests: " p
+        dup .
+    end
+end
+macro assert:log(success)
+    over -
+    dup if
+        "Successful tests: " p
+        dup .
+    end
+    drop
+end
+macro assert:log()
+    over assert:log(failed) drop
+    assert:log(success)
+end
