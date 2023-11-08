@@ -1,9 +1,12 @@
 #include "lexer.h"
+#include "macro.h"
 #include "token.h"
 #include "strutil.h"
 #include "source.h"
 #include "errors.h"
 
+#include <optional>
+#include <unordered_map>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -37,6 +40,111 @@ namespace black
 
     }
 
+    static inline bool is_macro_end(Token token, int32_t& count)
+    {
+        if (token.Type != TokenType::SYM) return false;
+
+        std::string sym = token.get_string();
+        if (sym == "end") {
+            if (count == 0) return true;
+            count -= 1;
+        } else if (sym == "if" || sym == "while") {
+            count += 1;
+        }
+
+        return false;
+    }
+
+    static inline bool get_macro_text(Token token, std::string& result)
+    {
+        if (token.Type != TokenType::SYM)
+            return false;
+
+        result = token.get_string();
+        return true;
+    }
+
+    static inline bool is_macro_start(Token token)
+    {
+        if (token.Type != TokenType::SYM)
+            return false;
+
+        return token.get_string() == "macro";
+    }
+
+    static inline std::vector<Token> load_macros_and_expand(const std::vector<Token>& raw_code)
+    {
+        std::unordered_map<std::string, Macro> macros;
+        std::vector<Token> code;
+
+        auto it = raw_code.begin();
+        while (it != raw_code.end())
+        {
+            auto item = *(it++);
+
+            if (!is_macro_start(item)) {
+                code.push_back(item);
+                continue;
+            }
+
+            if (it == raw_code.end())
+                THROW_MESSAGE("Unexpected macro name EOF!");
+
+            auto next = *(it++);
+            std::string macro_name;
+            if (!get_macro_text(next, macro_name))
+                THROW_UNEXPECTED("Unexpected macro name: ", next.to_str());
+
+            std::vector<Token> body;
+            bool success = false;
+            int32_t count = 0;
+            while (it != raw_code.end())
+            {
+                auto value = *(it++);
+                if (is_macro_end(value, count))
+                {
+                    Macro macro(macro_name, body);
+                    macros[macro_name] = macro;
+                    success = true;
+                    break;
+                }
+
+                body.push_back(value);
+            }
+
+            if (!success)
+                THROW_MESSAGE("Failed to read macro: EOF");
+        }
+
+        std::vector<Token> result;
+
+        it = code.begin();
+        while (it != code.end())
+        {
+            auto item = *(it++);
+            std::string text;
+            if (!get_macro_text(item, text))
+            {
+                result.push_back(item);
+                continue;
+            }
+
+            if (macros.find(text) == macros.end())
+            {
+                result.push_back(item);
+                continue;
+            }
+
+            const auto& macro = macros.at(text);
+            auto expanded = macro.Expand(macros, 8);
+            for (const auto& append : expanded)
+                result.push_back(append);
+        }
+
+        return result;
+    }
+
+
     std::vector<Token> lex_tokens(const std::filesystem::path& filepath)
     {
         std::string name = filepath.filename();
@@ -47,7 +155,7 @@ namespace black
             result.push_back(convert_string_to_token(word));
         }
 
-        return result;
+        return load_macros_and_expand(result);
     }
 
     std::vector<Op> lex_operands(const std::vector<Token>& tokens)

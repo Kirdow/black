@@ -1,6 +1,5 @@
-"Storing 12 at mem[6]..." P
-12 @ 6 + S
-"Loading value at mem[6]..." P
-@ 6 + L
-"Value: " p
-.
+inc std
+
+0 0 5 7 2dup
+. . . .
+
