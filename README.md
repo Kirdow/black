@@ -41,7 +41,7 @@ Then we use `.` to pop the top value (12) and then print it to the screen.<br>
 Take note that all integer values used are 64-bit (8 bytes) in size.
 
 ## Arithmetic operators
-Arithmetics is fairly straight forward. As with everything stack based, you'd often see `<value 1> <value 2> <operand>` rather than <value 1> <operand> <value 2>`.<br>
+Arithmetics is fairly straight forward. As with everything stack based, you'd often see `<value 1> <value 2> <operand>` rather than `<value 1> <operand> <value 2>`.<br>
 Here's how you'd use `+`, `-`, `*`, `/` and `%`:
 ```
 7 5 +
