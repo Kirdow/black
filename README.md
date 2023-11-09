@@ -233,7 +233,7 @@ This prints `ABC` with a new line.
 ## String literals
 String literals are strings defined in the source code using quotes.<br>
 Using string literals pushes its address and character count onto the stack,<br>
-n a way where it's ready to print.
+in a way where it's ready to print.
 
 String literals are located at its own piece of the executable just like with<br>
 oher compiled languages, and should thus not be written to.
