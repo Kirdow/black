@@ -3,4 +3,58 @@ macro @io @ 90000 + end
 macro @str @ 100000 + end
 macro @int @ 110000 + end
 
+macro S8 S end
+macro S16
+	1 +
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	drop drop
+end
+macro S32
+	3 +
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	drop drop
+end
+macro S64
+	7 +
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	over 255 & over S swap 8 >> swap 1 -
+	drop drop
+end
+
+macro L8 L end
+macro L16
+	0
+	over L + 8 << swap 1 + swap
+	over L + swap drop
+end
+macro L32
+	0
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + swap drop
+end
+macro L64
+	0
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + 8 << swap 1 + swap
+	over L + swap 1 + swap
+	swap drop
+end
+
 
