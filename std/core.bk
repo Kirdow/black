@@ -1,3 +1,9 @@
+// Duplicate the top two values on the stack
 macro 2dup over over end
+
+// Parse top value as bool and turn into string value true or false
 macro str(bool) if "true" else "false" end end
+
+// Get the length of a string.
+// NOTE: Consumes the string in the process
 macro sizeof(str) swap drop end

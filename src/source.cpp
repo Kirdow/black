@@ -52,6 +52,8 @@ namespace black
                 std::string sub_text = load_code_file(get_file_name(filepath, sstr.str()), filemap);
                 result << " " << sub_text;
             }
+			else if (strutil::cltrim(line).find("//") == 0)
+				continue;
             else
                 result << " " << line;
         }

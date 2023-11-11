@@ -1,8 +1,10 @@
+// Standard memory address locations for different uses
 macro @mem @ end
 macro @io @ 90000 + end
 macro @str @ 100000 + end
 macro @int @ 110000 + end
 
+// Macros for storing u8, u16, u32 and u64 values from the stack into memory
 macro S8 S end
 macro S16
 	1 +
@@ -31,6 +33,7 @@ macro S64
 	drop drop
 end
 
+// Macros for loading u8, u16, u32 and u64 value from memory onto the stack
 macro L8 L end
 macro L16
 	0
