@@ -1,0 +1,75 @@
+inc io
+inc mem
+inc core
+
+macro N 70 end
+
+1 @ N 1 - + S
+
+macro D2L 2dup . . end
+macro exit
+	0 60 syscall1
+end
+
+0 while dup N < do
+	dup @ + L
+	if '*' else ' ' end
+	over N 2 * + @ + S
+	1 +
+end
+drop
+
+N @ N 2 * + STDOUT 1 syscall3 endl
+
+0 while dup N < do
+	0 while dup N < do
+		0
+		over 0 > if
+			over 1 -
+			@ + L if
+				4 +
+			end
+		end
+		over N 1 - < if
+			over 1 +
+			@ + L if
+				1 +
+			end
+		end
+		over @ + L if
+			2 +
+		end
+
+		1
+		over 7 != &&
+		over 4 != &&
+		over 0 != &&
+		swap drop
+		over N + @ + S
+		1 +
+	end
+	drop
+
+	0 while dup N < do
+		@ over N + + L
+		over @ + N 2 * +
+		swap if
+			'*' swap
+		else
+			' ' swap
+		end
+		S
+		1 +
+	end
+	drop
+	N @ N 2 * + STDOUT 1 syscall3 endl
+	
+	0 while dup N < do
+		dup N + @ + L
+		over @ + S
+		1 +
+	end
+	drop
+
+	1 +
+end

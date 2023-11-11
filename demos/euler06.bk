@@ -1,0 +1,16 @@
+inc io
+inc mem
+inc core
+
+macro N 100 end
+
+0
+1 while dup N <= do
+	dup dup *
+	@ L64 + @ S64
+	swap over + swap
+	1 +
+end
+drop
+dup *
+@ L64 - .
