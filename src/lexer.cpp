@@ -35,7 +35,7 @@ namespace black
         else if (s.find("'") == 0 && s.rfind("'") == s.length() - 1)
             return Token::create_val(TokenType::CHAR, s.at(1));
         else if (is_number(s))
-            return Token::create_val(TokenType::NUM, static_cast<uint64_t>(std::stoi(s)));
+            return Token::create_val(TokenType::NUM, static_cast<uint64_t>(std::stoll(s)));
         return Token::create_val(TokenType::SYM, s);
 
     }

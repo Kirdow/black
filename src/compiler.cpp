@@ -74,7 +74,8 @@ namespace black
                 if (op.is_value<uint64_t>())
                 {
                     fs << "    ;; PUSH U64\n";
-                    fs << "    push " << op.get_u64() << "\n";
+                    fs << "    mov rax, " << op.get_u64() << "\n";
+					fs << "    push rax\n";
                 }
                 else if (op.is_value<std::string>())
                 {
