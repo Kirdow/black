@@ -82,8 +82,8 @@ namespace black
                     std::string str = op.get_string();
                     fs << "    ;; PUSH str lit " << strs.size() << " \"" << str << "\":" << str.length() << "\n";
                     fs << "    lea rax, [rel str_" << strs.size() << "]\n";
-                    fs << "    push rax\n";
                     fs << "    push " << str.length() << "\n";
+                    fs << "    push rax\n";
                     strs.push_back(str);
                 }
                 else

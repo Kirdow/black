@@ -13,10 +13,8 @@ macro write
     STDOUT SYS_WRITE syscall3
 end
 
-// Wrapper for the `p` keyword. Requires swap due to black providing count in the opposite order
-macro p
-    swap write
-end
+// Wrapper for the `p` keyword.
+macro p write end
 
 // Wrapper for `.` in order to print an integer without newline.
 macro iprint
@@ -38,7 +36,7 @@ end
 // syscall 1 macro to send a newline to STDOUT
 macro endl
     '\n' @io S
-    @io 1 p
+    1 @io p
 end
 
 // Wrapper for the `P` keyword. Calls `p` followed by `endl`.
