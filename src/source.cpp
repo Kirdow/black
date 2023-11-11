@@ -64,7 +64,7 @@ namespace black
     static inline std::vector<std::string> get_code_words(std::string text)
     {
         strutil::trim(text);
-        std::vector<std::string> words = strutil::explode(text, " ");
+        std::vector<std::string> words = strutil::explode(text, " \t\r\n");
         return words;
     }
 
