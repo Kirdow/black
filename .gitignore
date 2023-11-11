@@ -9,3 +9,9 @@ build
 *.asm
 test
 
+# black files
+demos/*
+!demos/*.bk
+
+tests/*
+!tests/*.bk
