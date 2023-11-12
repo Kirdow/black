@@ -1,10 +1,5 @@
+#include "pch.h"
 #include "source.h"
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <unordered_set>
-#include <vector>
 #include "strutil.h"
 
 extern std::filesystem::path s_ParentDir;

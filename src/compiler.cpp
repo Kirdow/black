@@ -1,10 +1,7 @@
+#include "pch.h"
 #include "compiler.h"
 #include "token.h"
 #include "errors.h"
-
-#include <fstream>
-#include <iostream>
-#include <vector>
 
 namespace black
 {

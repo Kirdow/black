@@ -1,18 +1,10 @@
+#include "pch.h"
 #include "lexer.h"
 #include "macro.h"
 #include "token.h"
 #include "strutil.h"
 #include "source.h"
 #include "errors.h"
-
-#include <optional>
-#include <unordered_map>
-#include <vector>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <ranges>
-#include <cctype>
 
 namespace black
 {

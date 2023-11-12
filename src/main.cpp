@@ -1,14 +1,7 @@
+#include "pch.h"
 #include "compiler.h"
 #include "lexer.h"
 #include "token.h"
-#include <exception>
-#include <filesystem>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <vector>
 #include "strutil.h"
 
 std::string read_file(const std::string& filename);
