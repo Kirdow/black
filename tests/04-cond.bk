@@ -1,4 +1,5 @@
 inc asserts
+assert:init()
 
 "Should only print true" P
 
@@ -28,4 +29,4 @@ else
     0 +
 end
 
-3 assert:log()
+3 assert:end()

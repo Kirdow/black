@@ -352,6 +352,9 @@ namespace black
                     fs << "    syscall\n";
                     break;
                 }
+			case OpType::CAST:
+				fs << "    ;; CAST " << op.get_string() << "\n";
+				break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");

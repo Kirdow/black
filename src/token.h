@@ -80,6 +80,7 @@ namespace black
 
             return sstr.str();
         }
+
         static inline Token create(TokenType type)
         {
             Token token;
@@ -134,7 +135,8 @@ namespace black
         LOAD,
         STORE,
         SYSCALL,
-        PUTS
+        PUTS,
+		CAST
     };
 
     static inline const char* op_name(OpType type)
@@ -178,9 +180,56 @@ namespace black
         case OpType::STORE: return "STORE";
         case OpType::SYSCALL: return "SYSCALL";
         case OpType::PUTS: return "PUTS";
+		case OpType::CAST: return "CAST";
         default: return "UnknownOp";
         }
     }
+
+	static inline const char* op_code(OpType type)
+	{
+		switch (type)
+		{
+		case OpType::NOP: return "nop";
+		case OpType::PUSH: return "push";
+		case OpType::LOG: return ".";
+		case OpType::ADD: return "+";
+		case OpType::SUB: return "-";
+		case OpType::MUL: return "*";
+		case OpType::DIV: return "/";
+		case OpType::MOD: return "%";
+		case OpType::SHL: return "<<";
+		case OpType::SHR: return ">>";
+		case OpType::BAND: return "&";
+		case OpType::BOR: return "|";
+		case OpType::BXOR: return "^";
+		case OpType::BNOT: return "~";
+		case OpType::LT: return "<";
+		case OpType::GT: return ">";
+		case OpType::LTE: return "<=";
+		case OpType::GTE: return ">=";
+		case OpType::EQ: return "=";
+		case OpType::NEQ: return "!=";
+		case OpType::LAND: return "&&";
+		case OpType::LOR: return "||";
+		case OpType::LNOT: return "!";
+		case OpType::IF: return "if";
+		case OpType::ELSE: return "else";
+		case OpType::WHILE: return "while";
+		case OpType::DO: return "do";
+		case OpType::END: return "end";
+		case OpType::DUP: return "dup";
+		case OpType::OVER: return "over";
+		case OpType::SWAP: return "swap";
+		case OpType::DROP: return "drop";
+		case OpType::MEM: return "@";
+		case OpType::LOAD: return "L";
+		case OpType::STORE: return "S";
+		case OpType::SYSCALL: return "syscall";
+		case OpType::PUTS: return "p";
+		case OpType::CAST: return "cast";
+		default: return "unknown_operand";
+		}
+	}
 
     struct Op : public ValueType
     {
@@ -193,17 +242,55 @@ namespace black
 
             switch (Type)
             {
-            case OpType::PUSH: sstr << " " << get_u64(); break;
+			case OpType::PUSH: {
+				sstr << " ";
+				if (is_value<std::string>())
+					sstr << '"' << get_string() << '"';
+				else if (is_value<int8_t>())
+					sstr << "'" << (char)get_i8() << "'";
+				else if (is_value<uint64_t>())
+					sstr << get_u64();
+				else
+					sstr << "unknown_type";
+				break;
+			}
             case OpType::IF: sstr << " " << get_u64(); break;
             case OpType::ELSE: sstr << " " << get_u64(); break;
             case OpType::DO: sstr << " " << get_u64(); break;
             case OpType::END: sstr << " " << get_u64(); break;
             case OpType::PUTS: sstr << " " << (get_i8() != 0 ? "true" : "false"); break;
+			case OpType::CAST: sstr << " " << get_string(); break;
+			case OpType::SYSCALL: sstr << get_i8(); break;
             default: break;
             }
 
             return sstr.str();
         }
+
+		inline std::string to_code() const
+		{
+			std::stringstream sstr;
+
+			switch (Type)
+			{
+			case OpType::PUSH:
+				if (is_value<std::string>())
+					sstr << '"' << get_string() << '"';
+				else if (is_value<int8_t>())
+					sstr << "'" << (char)get_i8() << "'";
+				else if (is_value<uint64_t>())
+					sstr << get_u64();
+				else
+					sstr << "unknown_type";
+				break;
+			case OpType::CAST: sstr << op_code(Type) << "(" << get_string() << ")"; break;
+			case OpType::SYSCALL: sstr << op_code(Type) << get_i8(); break;
+			default:
+				return op_code(Type);
+			}
+
+			return sstr.str();
+		}
 
         static inline Op create(OpType type)
         {

@@ -9,4 +9,5 @@ inc core
 
 	swap over +
 end
+drop drop
 @ L64 .

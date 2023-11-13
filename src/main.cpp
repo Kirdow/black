@@ -3,6 +3,7 @@
 #include "lexer.h"
 #include "token.h"
 #include "strutil.h"
+#include "typing.h"
 
 std::string read_file(const std::string& filename);
 
@@ -50,6 +51,16 @@ int main(int argc, char** argv)
     std::vector<black::Token> tokens = black::lex_tokens(filename);
     if (is_verbose) std::cout << "-- Creating operands" << std::endl;
     std::vector<black::Op> operands = black::lex_operands(tokens);
+	if (is_verbose) std::cout << "-- Validating static typing" << std::endl;
+	auto result = black::st_validate(operands);
+	if (!result.IsOk())
+	{
+		std::cout << result.GetMessage() << "\033[91mValidation Failed\033[0m" << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	if (is_verbose && !result.GetMessage().empty())
+		std::cout << "\033[92mValidation Ok:\033[0m" << std::endl << result.GetMessage() << std::endl;
     if (is_verbose) std::cout << "-- Building executable" << std::endl;
     black::build_program(operands, filename);
     if (is_verbose) std::cout << "-- Running program" << std::endl;

@@ -3,6 +3,8 @@
 # flags
 is_clean=false
 is_clear=false
+is_silent=false
+is_cat=false
 
 filename=test.bk
 next_file=false
@@ -15,8 +17,14 @@ for arg in "$@"; do
             is_clean=true
             ;;
         --silent-build)
-            is_clear=true
+			is_silent=true
             ;;
+		--clear)
+			is_clear=true
+			;;
+		--cat)
+			is_cat=true
+			;;
         --file)
             next_file=true
             ;;
@@ -35,7 +43,7 @@ done
 if $is_clean; then
     if ! $is_clear; then
         # Print cleanup step
-        echo Cleanup before build
+        printf "\e[32mCleanup before build\e[0m\n"
     fi
 
     # Cleanup here
@@ -47,24 +55,37 @@ if [ ! -d "build/" ]; then
     mkdir build 
 fi
 
+if ! $is_clear && ! $is_silent; then
+	# Print build step
+	printf "\e[32mBuilding black\e[0m\n"
+fi
+
 # Check if arguments contains "clear"
-if $is_clear; then
+if $is_silent; then
     # Compile program
     cmake -S . -B build/ > /dev/null 2>&1
 
     # Build/Link program
     cmake --build build/ > /dev/null 2>&1
-
 else
     # Compile program
     cmake -S . -B build/
 
     # Build/Link program
     cmake --build build/
-    
+fi
+
+if $is_cat; then
+	if ! $is_clear; then
+		# Print cat notice
+		printf "\e[32m$filename source:\e[0m\n"
+	fi
+	cat $filename
+fi
+
+if ! $is_clear; then
     # Print before running
-    echo
-    echo RUNNING black
+    printf "\e[32mRUNNING black\e[0m\n"
 fi
 
 # Run the program

@@ -1,4 +1,6 @@
 inc asserts
+assert:init()
+
 assert:vlog(unset)
 
 "Testing against 5 7, 7 7 and 9 7" P
@@ -63,4 +65,4 @@ assert:vlog(unset)
 9 7 !=
 1 assert(=)
 
-18 assert:log()
+18 assert:end()

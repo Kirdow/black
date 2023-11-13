@@ -292,6 +292,10 @@ namespace black
                     result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 5));
                 else if ("syscall6" == sym)
                     result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 6));
+				else if ("cast(ptr)" == sym)
+					result.push_back(Op::create_val<std::string>(OpType::CAST, "ptr"));
+				else if ("cast(int)" == sym)
+					result.push_back(Op::create_val<std::string>(OpType::CAST, "int"));
                 else
                     THROW_UNEXPECTED("Unexpected symbol: ", sym);
             }

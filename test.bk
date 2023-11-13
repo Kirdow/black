@@ -1,3 +1,46 @@
 inc io
 
-42069 print(int)
+// Set every other to 1
+0 while dup 10 < do
+	// index % 2
+	dup 2 %
+
+	// store at index in memory
+	over @ + S
+
+	// increment index
+	1 +
+end
+drop
+
+// This will cause an error on this line.
+// You can't multiply a ptr with int.
+@ 5 *
+// We also drop the values from stack
+//  so we don't get the stack mismatch
+//  error at the end.
+drop drop
+
+// Write '*' for every 1
+0 while dup 10 < do
+	// Load value at index
+	dup @ + L
+
+	// '*' for even, ' ' for odd
+	if '*' else ' ' end
+
+	// Save it at mem[20 + index]
+	over 10 2 * + @ + S
+
+	// increment index
+	1 +
+end
+drop
+
+// Write the string to standard out
+// <count> <address> <stream> SYS_WRITE syscall3
+10 10 2 * @ + STDOUT SYS_WRITE syscall3
+
+// Also write a newline
+'\n' @ S
+1 @ STDOUT SYS_WRITE syscall3

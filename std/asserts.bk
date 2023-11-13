@@ -52,3 +52,5 @@ macro assert:log()
     assert:log(success)
 end
 
+macro assert:init() 0 end
+macro assert:end() assert:log() drop end

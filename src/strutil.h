@@ -181,5 +181,22 @@ namespace strutil
         
         return value;
     }
+
+	static inline void _append_stream(std::stringstream& sstr) {}
+
+	template<typename T, typename...Args>
+	static inline void _append_stream(std::stringstream& sstr, T value, Args... args)
+	{
+		sstr << value;
+		_append_stream(sstr, args...);
+	}
+
+	template<typename... Args>
+	static inline std::string concat(Args... args)
+	{
+		std::stringstream sstr;
+		_append_stream(sstr, args...);
+		return sstr.str();
+	}
 }
 

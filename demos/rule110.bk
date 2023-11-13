@@ -73,3 +73,4 @@ N @ N 2 * + STDOUT 1 syscall3 endl
 
 	1 +
 end
+drop
