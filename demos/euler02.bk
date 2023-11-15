@@ -3,7 +3,7 @@ inc mem
 inc core
 
 1 2 while dup 4000000 < do
-	dup 2 % ! if
+	dup 2 % 0 = if
 		dup @ L64 + @ S64
 	end
 

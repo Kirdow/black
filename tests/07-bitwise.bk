@@ -1,3 +1,4 @@
+inc core
 inc asserts
 assert:init()
 
@@ -10,36 +11,36 @@ assert:init()
 1 assert(=)
 
 "0 0 &&" P
-0 0 &&
-0 assert(=)
+false false &&
+false assert(=)
 
 "1 0 &&" P
-1 0 &&
-0 assert(=)
+true false &&
+false assert(=)
 
 "1 1 &&" P
-1 1 &&
-1 assert(=)
+true true &&
+true assert(=)
 
 "69 420 &&" P
-69 420 &&
-1 assert(=)
+69 cast(bool) 420 cast(bool) &&
+true assert(=)
 
 "0 0 ||" P
-0 0 ||
-0 assert(=)
+false false ||
+false assert(=)
 
 "1 0 ||" P
-1 0 ||
-1 assert(=)
+true false ||
+true assert(=)
 
 "1 1 ||" P
-1 1 ||
-1 assert(=)
+true true ||
+true assert(=)
 
 "69 0 ||" P
-69 0 ||
-1 assert(=)
+69 cast(bool) false ||
+true assert(=)
 
 "5 2 <<" P
 5 2 <<
@@ -54,15 +55,15 @@ assert:init()
 -6 assert(=)
 
 "0 !" P
-0 !
-1 assert(=)
+false !
+true assert(=)
 
 "1 !" P
-1 !
-0 assert(=)
+true !
+false assert(=)
 
 "69 !" P
-69 !
-0 assert(=)
+69 cast(bool) !
+false assert(=)
 
 16 assert:end()

@@ -7,62 +7,62 @@ assert:vlog(unset)
 
 "Testing <" P
 5 7 <
-1 assert(=)
+true assert(=)
 
 7 7 <
-0 assert(=)
+false assert(=)
 
 9 7 <
-0 assert(=)
+false assert(=)
 
 "Testing >" P
 5 7 >
-0 assert(=)
+false assert(=)
 
 7 7 >
-0 assert(=)
+false assert(=)
 
 9 7 >
-1 assert(=)
+true assert(=)
 
 "Testing <=" P
 5 7 <=
-1 assert(=)
+true assert(=)
 
 7 7 <=
-1 assert(=)
+true assert(=)
 
 9 7 <=
-0 assert(=)
+false assert(=)
 
 "Testing >=" P
 5 7 >=
-0 assert(=)
+false assert(=)
 
 7 7 >=
-1 assert(=)
+true assert(=)
 
 9 7 >=
-1 assert(=)
+true assert(=)
 
 "Testing =" P
 5 7 =
-0 assert(=)
+false assert(=)
 
 7 7 =
-1 assert(=)
+true assert(=)
 
 9 7 =
-0 assert(=)
+false assert(=)
 
 "Testing !=" P
 5 7 !=
-1 assert(=)
+true assert(=)
 
 7 7 !=
-0 assert(=)
+false assert(=)
 
 9 7 !=
-1 assert(=)
+true assert(=)
 
 18 assert:end()

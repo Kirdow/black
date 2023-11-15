@@ -210,6 +210,10 @@ namespace black
                     result.push_back(Op::create(OpType::EQ));
                 else if ("!=" == sym)
                     result.push_back(Op::create(OpType::NEQ));
+				else if ("true" == sym)
+					result.push_back(Op::create_val<bool>(OpType::PUSH, true));
+				else if ("false" == sym)
+					result.push_back(Op::create_val<bool>(OpType::PUSH, false));
                 else if ("if" == sym)
                 {
                     stack.push_back(ip);
@@ -296,6 +300,8 @@ namespace black
 					result.push_back(Op::create_val<std::string>(OpType::CAST, "ptr"));
 				else if ("cast(int)" == sym)
 					result.push_back(Op::create_val<std::string>(OpType::CAST, "int"));
+				else if ("cast(bool)" == sym)
+					result.push_back(Op::create_val<std::string>(OpType::CAST, "bool"));
                 else
                     THROW_UNEXPECTED("Unexpected symbol: ", sym);
             }

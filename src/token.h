@@ -31,7 +31,7 @@ namespace black
 
     struct ValueType
     {
-        std::variant<std::string, uint64_t, int8_t> Data;
+        std::variant<std::string, uint64_t, int8_t, bool> Data;
 
         inline std::string get_string() const
         {
@@ -52,6 +52,11 @@ namespace black
         {
             return std::get<int8_t>(Data);
         }
+
+		inline bool get_bool() const
+		{
+			return std::get<bool>(Data);
+		}
 
         template<typename T>
         inline bool is_value() const
@@ -250,6 +255,8 @@ namespace black
 					sstr << "'" << (char)get_i8() << "'";
 				else if (is_value<uint64_t>())
 					sstr << get_u64();
+				else if (is_value<bool>())
+					sstr << (get_bool() ? "true" : "false");
 				else
 					sstr << "unknown_type";
 				break;
@@ -280,6 +287,8 @@ namespace black
 					sstr << "'" << (char)get_i8() << "'";
 				else if (is_value<uint64_t>())
 					sstr << get_u64();
+				else if (is_value<bool>())
+					sstr << (get_bool() ? "true" : "false");
 				else
 					sstr << "unknown_type";
 				break;

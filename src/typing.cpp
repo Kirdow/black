@@ -8,7 +8,7 @@ namespace black
 {
 	enum class StaticType
 	{
-		Int, Ptr
+		Int, Ptr, Bool
 	};
 
 	static inline const char* type_name(StaticType type)
@@ -17,6 +17,7 @@ namespace black
 		{
 		case StaticType::Int: return "Int";
 		case StaticType::Ptr: return "Ptr";
+		case StaticType::Bool: return "Bool";
 		}
 
 		return "UnknownType";
@@ -100,6 +101,8 @@ namespace black
 				stack.push(StaticType::Int);
 				stack.push(StaticType::Ptr);
 			}
+			else if (operand.is_value<bool>())
+				stack.push(StaticType::Bool);
 			else
 				return "Invalid push operand. Unknown type!";
 			break;
@@ -142,27 +145,49 @@ namespace black
 		case OpType::BAND:
 		case OpType::BOR:
 		case OpType::BXOR:
+			if (!stack.has(2)) return strutil::concat("Operand requires 2 values on stack: ", operand.to_code());
+			v0 = stack.peek(1);
+			v1 = stack.peek(2);
+			if (v1 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int. Got ", type_name(v1), ".");
+			if (v0 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int Int. Got Int ", type_name(v0), ".");
+			stack.pop(2);
+			stack.push(StaticType::Int);
+			break;
 		case OpType::LT:
 		case OpType::GT:
 		case OpType::LTE:
 		case OpType::GTE:
+			if (!stack.has(2)) return strutil::concat("Operand requires 2 values on stack: ", operand.to_code());
+			v0 = stack.peek(1);
+			v1 = stack.peek(2);
+			if (v1 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int. Got ", type_name(v1), ".");
+			if (v0 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int Int. Got Int ", type_name(v0), ".");
+			stack.pop(2);
+			stack.push(StaticType::Bool);
+			break;
 		case OpType::LAND:
 		case OpType::LOR:
 			if (!stack.has(2)) return strutil::concat("Operand requires 2 values on stack: ", operand.to_code());
 			v0 = stack.peek(1);
 			v1 = stack.peek(2);
-			if (v1 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int. Got ", type_name(v1), ".");
-			if (v0 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int. Got ", type_name(v0), ".");
+			if (v1 != StaticType::Bool) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Bool. Got ", type_name(v1), ".");
+			if (v0 != StaticType::Bool) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Bool Bool. Got Bool ", type_name(v0), ".");
 			stack.pop(2);
-			stack.push(StaticType::Int);
+			stack.push(StaticType::Bool);
 			break;
 		case OpType::BNOT:
-		case OpType::LNOT:
 			if (!stack.has(1)) return strutil::concat("Operand requires 1 value on stack: ", operand.to_code());
 			v0 = stack.peek(1);
 			if (v0 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int. Got ", type_name(v0), ".");
 			stack.pop(1);
 			stack.push(StaticType::Int);
+			break;
+		case OpType::LNOT:
+			if (!stack.has(1)) return strutil::concat("Operand requires 1 value on stack: ", operand.to_code());
+			v0 = stack.peek(1);
+			if (v0 != StaticType::Bool) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Bool. Got ", type_name(v0), ".");
+			stack.pop(1);
+			stack.push(StaticType::Bool);
 			break;
 		case OpType::EQ:
 		case OpType::NEQ:
@@ -171,13 +196,13 @@ namespace black
 			v1 = stack.peek(2);
 			if (v0 != v1) return strutil::concat("Operand is ", operand.to_code(), " but the types don't match. Comparison is redundant.");
 			stack.pop(2);
-			stack.push(StaticType::Int);
+			stack.push(StaticType::Bool);
 			break;
 		case OpType::IF:
 		case OpType::DO:
 			if (!stack.has(1)) return strutil::concat("Operand requires 1 value on stack: ", operand.to_code());
 			v0 = stack.peek(1);
-			if (v0 != StaticType::Int) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Int. Got ", type_name(v0), ".");
+			if (v0 != StaticType::Bool) return strutil::concat("Unknown type for ", operand.to_code(), ", expected Bool. Got ", type_name(v0), ".");
 			stack.pop(1);
 
 			branch_stack.push(Branch(stack, 0));
@@ -271,18 +296,21 @@ namespace black
 			stack.pop(1);
 			if (s0 == "ptr")
 			{
-				if (v0 == StaticType::Ptr) return strutil::concat(operand.to_code(), " requires different source type from destination type. Expected Non-Ptr. Got Ptr.");
 				stack.push(StaticType::Ptr);
 				break;
 			}
 			else if (s0 == "int")
 			{
-				if (v0 == StaticType::Int) return strutil::concat(operand.to_code(), " requires different source type from destination type. Expected Non-Int. Got Int.");
 				stack.push(StaticType::Int);
 				break;
 			}
+			else if (s0 == "bool")
+			{
+				stack.push(StaticType::Bool);
+				break;
+			}
 
-			return strutil::concat(operand.to_code(), " expects Int or Ptr type. Got ", s0, ".");
+			return strutil::concat(operand.to_code(), " expects Int, Ptr or Bool type. Got ", s0, ".");
 		default:
 			break;
 		}
@@ -297,6 +325,7 @@ namespace black
 
 		std::stringstream sstr;
 		bool success = true;
+		size_t error_count = 0;
 		size_t ip = 0;
 		while (ip < code.size())
 		{
@@ -305,8 +334,11 @@ namespace black
 			auto result = use_opcode(branch_stack, stack, operand);
 			if (result) // If result has a value, it means it has an error message.
 			{
-				sstr << "Operand stack mismatch.\n\033[91mError:\033[0m\n\t" << result.value() << "\n";
+				if (error_count == 0)
+					sstr << "Operand stack mismatch.\n";
+				sstr << "\033[91mError:\033[0m\n\t" << result.value() << "\n";
 				success = false;
+				++error_count;
 			}
 		}
 
@@ -314,7 +346,11 @@ namespace black
 		{
 			sstr << "\033[91mError:\033[0m\n\tStack mismatch on program exit: " << stack.size() << "\n";
 			success = false;
+			++error_count;
 		}
+
+		if (error_count > 0)
+			sstr << "Validation exit with \033[91m" << error_count << "\033[0m errors.\n";
 
 		if (success)
 			return StaticTypingResult::Ok("");

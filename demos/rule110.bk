@@ -13,7 +13,7 @@ end
 
 0 while dup N < do
 	dup @ + L
-	if '*' else ' ' end
+	cast(bool) if '*' else ' ' end
 	over N 2 * + @ + S
 	1 +
 end
@@ -26,21 +26,21 @@ N @ N 2 * + STDOUT 1 syscall3 endl
 		0
 		over 0 > if
 			over 1 -
-			@ + L if
+			@ + L cast(bool) if
 				4 +
 			end
 		end
 		over N 1 - < if
 			over 1 +
-			@ + L if
+			@ + L cast(bool) if
 				1 +
 			end
 		end
-		over @ + L if
+		over @ + L cast(bool) if
 			2 +
 		end
 
-		1
+		true
 		over 7 != &&
 		over 4 != &&
 		over 0 != &&
@@ -53,7 +53,7 @@ N @ N 2 * + STDOUT 1 syscall3 endl
 	0 while dup N < do
 		@ over N + + L
 		over @ + N 2 * +
-		swap if
+		swap cast(bool) if
 			'*' swap
 		else
 			' ' swap
