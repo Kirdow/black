@@ -1,5 +1,7 @@
 #!/bin/sh
 
+no_clean=false
+
 echo_files() {
 	echo "These are the current tests"
 	for file in "$@"; do
@@ -9,6 +11,16 @@ echo_files() {
 }
 
 dir="./tests"
+
+for arg in "$@"; do
+	case "$arg" in
+		--no-clean)
+			no_clean=true
+			;;
+		*)
+			;;
+	esac
+done
 
 if [ $# -eq 0 ]; then
 	echo_files $(ls $dir | grep -E '^[0-9]{2}.*\.bk$' | sort -V)
@@ -25,8 +37,13 @@ if [ -z "$filename" ]; then
 	exit 1
 fi
 
+cleanarg=
+if ! $no_clean; then
+	cleanarg=--clean
+fi
+
 echo "Running test: $filename"
-./run.sh --silent-build --clean --clear --file "$filepath"
+./run.sh --silent-build $cleanarg --clear --file "$filepath"
 exit_code=$?
 
 rm -f "${dir}/${filename}.asm" "${dir}/${filename}.o" "${dir}/${filename}"
