@@ -7,9 +7,6 @@ macro N 70 end
 1 @ N 1 - + S
 
 macro D2L 2dup . . end
-macro exit
-	0 60 syscall1
-end
 
 0 while dup N < do
 	dup @ + L
@@ -19,7 +16,7 @@ end
 end
 drop
 
-N @ N 2 * + STDOUT 1 syscall3 endl
+N @ N 2 * + write endl
 
 0 while dup N < do
 	0 while dup N < do
@@ -62,7 +59,7 @@ N @ N 2 * + STDOUT 1 syscall3 endl
 		1 +
 	end
 	drop
-	N @ N 2 * + STDOUT 1 syscall3 endl
+	N @ N 2 * + write endl
 	
 	0 while dup N < do
 		dup N + @ + L

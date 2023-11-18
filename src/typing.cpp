@@ -288,6 +288,7 @@ namespace black
 			i0 = operand.get_i8();
 			if (!stack.has(i0)) return strutil::concat(operand.to_code(), " requires ", (i0 + 1), " values on stack.");
 			stack.pop(i0);
+			stack.push(StaticType::Int);
 			break;
 		case OpType::CAST:
 			s0 = operand.get_string();

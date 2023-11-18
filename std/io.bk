@@ -6,15 +6,31 @@ macro STDOUT 1 end
 macro STDERR 2 end
 
 // Syscall IDs
+macro SYS_READ 0 end
 macro SYS_WRITE 1 end
 
 // Wrapper for STDOUT Write syscall
 macro write
-    STDOUT SYS_WRITE syscall3
+    STDOUT SYS_WRITE syscall3 drop
 end
+
+// Wrapper for STDIN Read syscall
+macro read
+	STDIN SYS_READ syscall3
+end
+
 
 // Wrapper for the `p` keyword.
 macro p write end
+
+// Wrapper for the `r` keyword.
+macro r
+	swap over
+	read 1 - + 0 swap S
+end
+
+// Wrapper for the `R` keyword.
+macro R read drop end
 
 // Wrapper for `.` in order to print an integer without newline.
 macro iprint

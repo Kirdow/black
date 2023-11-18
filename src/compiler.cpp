@@ -356,6 +356,7 @@ namespace black
                     if (sys_nr > 6)
                         std::cout << "WARNING: Unsupported Syscall Id: " << sys_nr << std::endl;
                     fs << "    syscall\n";
+					fs << "    push rax\n";
                     break;
                 }
 			case OpType::CAST:
