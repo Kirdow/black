@@ -1,6 +1,0 @@
-inc io
-
-"Hello, World!" P
-"No New Line: " p
-"New Line!" P
-"Success" P
