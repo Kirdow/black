@@ -20,16 +20,15 @@ namespace black
         return true;
     }
 
-    static inline Token convert_string_to_token(const std::string& s)
+    static inline Token convert_string_to_token(const SourceToken& s)
     {
-        if (s.find("\"") == 0 && s.rfind("\"") == s.length() - 1)
-            return Token::create_val(TokenType::TEXT, s.substr(1, s.length() - 2));
-        else if (s.find("'") == 0 && s.rfind("'") == s.length() - 1)
-            return Token::create_val(TokenType::CHAR, s.at(1));
-        else if (is_number(s))
-            return Token::create_val(TokenType::NUM, static_cast<uint64_t>(std::stoll(s)));
-        return Token::create_val(TokenType::SYM, s);
-
+        if (s.Text.find("\"") == 0 && s.Text.rfind("\"") == s.Text.length() - 1)
+            return Token::create_val(TokenType::TEXT, s.Loc, s.Text.substr(1, s.Text.length() - 2));
+        else if (s.Text.find("'") == 0 && s.Text.rfind("'") == s.Text.length() - 1)
+            return Token::create_val(TokenType::CHAR, s.Loc, s.Text.at(1));
+        else if (is_number(s.Text))
+            return Token::create_val(TokenType::NUM, s.Loc, static_cast<uint64_t>(std::stoll(s.Text)));
+        return Token::create_val(TokenType::SYM, s.Loc, s.Text);
     }
 
     static inline bool is_macro_end(Token token, int32_t& count)
@@ -140,9 +139,9 @@ namespace black
     std::vector<Token> lex_tokens(const std::filesystem::path& filepath)
     {
         std::string name = filepath.filename();
-        std::vector<std::string> source_code = load_code(filepath.parent_path() / (name + ".bk"));
+        std::vector<SourceToken> source_code = load_code(filepath.parent_path() / (name + ".bk"));
         std::vector<Token> result;
-        for (const std::string& word : source_code)
+        for (const SourceToken& word : source_code)
         {
             result.push_back(convert_string_to_token(word));
         }
@@ -159,65 +158,65 @@ namespace black
         for (const auto& token : tokens)
         {
             if (token.Type == TokenType::NUM)
-                result.push_back(Op::create_val<uint64_t>(OpType::PUSH, token.get_u64()));
+                result.push_back(Op::create_val<uint64_t>(OpType::PUSH, token, token.get_u64()));
             else if (token.Type == TokenType::TEXT)
-                result.push_back(Op::create_val<std::string>(OpType::PUSH, token.get_string()));
+                result.push_back(Op::create_val<std::string>(OpType::PUSH, token, token.get_string()));
             else if (token.Type == TokenType::CHAR)
-                result.push_back(Op::create_val<uint64_t>(OpType::PUSH, static_cast<uint64_t>(static_cast<uint8_t>(token.get_i8()))));
+                result.push_back(Op::create_val<uint64_t>(OpType::PUSH, token, static_cast<uint64_t>(static_cast<uint8_t>(token.get_i8()))));
             else if (token.Type == TokenType::SYM)
             {
                 std::string sym = token.get_string();
 
                 if ("." == sym)
-                    result.push_back(Op::create(OpType::LOG));
+                    result.push_back(Op::create(OpType::LOG, token));
                 else if ("+" == sym)
-                    result.push_back(Op::create(OpType::ADD));
+                    result.push_back(Op::create(OpType::ADD, token));
                 else if ("-" == sym)
-                    result.push_back(Op::create(OpType::SUB));
+                    result.push_back(Op::create(OpType::SUB, token));
                 else if ("*" == sym)
-                    result.push_back(Op::create(OpType::MUL));
+                    result.push_back(Op::create(OpType::MUL, token));
                 else if ("/" == sym)
-                    result.push_back(Op::create(OpType::DIV));
+                    result.push_back(Op::create(OpType::DIV, token));
                 else if ("%" == sym)
-                    result.push_back(Op::create(OpType::MOD));
+                    result.push_back(Op::create(OpType::MOD, token));
                 else if ("<<" == sym)
-                    result.push_back(Op::create(OpType::SHL));
+                    result.push_back(Op::create(OpType::SHL, token));
                 else if (">>" == sym)
-                    result.push_back(Op::create(OpType::SHR));
+                    result.push_back(Op::create(OpType::SHR, token));
                 else if ("&" == sym)
-                    result.push_back(Op::create(OpType::BAND));
+                    result.push_back(Op::create(OpType::BAND, token));
                 else if ("|" == sym)
-                    result.push_back(Op::create(OpType::BOR));
+                    result.push_back(Op::create(OpType::BOR, token));
                 else if ("^" == sym)
-                    result.push_back(Op::create(OpType::BXOR));
+                    result.push_back(Op::create(OpType::BXOR, token));
                 else if ("~" == sym)
-                    result.push_back(Op::create(OpType::BNOT));
+                    result.push_back(Op::create(OpType::BNOT, token));
                 else if ("<" == sym)
-                    result.push_back(Op::create(OpType::LT));
+                    result.push_back(Op::create(OpType::LT, token));
                 else if (">" == sym)
-                    result.push_back(Op::create(OpType::GT));
+                    result.push_back(Op::create(OpType::GT, token));
                 else if ("<=" == sym)
-                    result.push_back(Op::create(OpType::LTE));
+                    result.push_back(Op::create(OpType::LTE, token));
                 else if (">=" == sym)
-                    result.push_back(Op::create(OpType::GTE));
+                    result.push_back(Op::create(OpType::GTE, token));
                 else if ("&&" == sym)
-                    result.push_back(Op::create(OpType::LAND));
+                    result.push_back(Op::create(OpType::LAND, token));
                 else if ("||" == sym)
-                    result.push_back(Op::create(OpType::LOR));
+                    result.push_back(Op::create(OpType::LOR, token));
                 else if ("!" == sym)
-                    result.push_back(Op::create(OpType::LNOT));
+                    result.push_back(Op::create(OpType::LNOT, token));
                 else if ("=" == sym)
-                    result.push_back(Op::create(OpType::EQ));
+                    result.push_back(Op::create(OpType::EQ, token));
                 else if ("!=" == sym)
-                    result.push_back(Op::create(OpType::NEQ));
+                    result.push_back(Op::create(OpType::NEQ, token));
 				else if ("true" == sym)
-					result.push_back(Op::create_val<bool>(OpType::PUSH, true));
+					result.push_back(Op::create_val<bool>(OpType::PUSH, token, true));
 				else if ("false" == sym)
-					result.push_back(Op::create_val<bool>(OpType::PUSH, false));
+					result.push_back(Op::create_val<bool>(OpType::PUSH, token, false));
                 else if ("if" == sym)
                 {
                     stack.push_back(ip);
-                    result.push_back(Op::create_val<uint64_t>(OpType::IF, 0));
+                    result.push_back(Op::create_val<uint64_t>(OpType::IF, token, 0));
                 }
                 else if ("else" == sym)
                 {
@@ -227,7 +226,7 @@ namespace black
                     {
                         result_sym.Data = static_cast<uint64_t>(ip + 1);
                         stack.push_back(ip);
-                        result.push_back(Op::create_val<uint64_t>(OpType::ELSE, 0));
+                        result.push_back(Op::create_val<uint64_t>(OpType::ELSE, token, 0));
                     }
                     else
                         throw std::runtime_error("Unexpected else begin");
@@ -235,13 +234,13 @@ namespace black
                 else if ("while" == sym)
                 {
                     stack.push_back(ip);
-                    result.push_back(Op::create(OpType::WHILE));
+                    result.push_back(Op::create(OpType::WHILE, token));
                 }
                 else if ("do" == sym)
                 {
                     uint64_t while_ip = stack.at(stack.size() - 1); stack.pop_back();
                     stack.push_back(ip);
-                    result.push_back(Op::create_val<uint64_t>(OpType::DO, while_ip));
+                    result.push_back(Op::create_val<uint64_t>(OpType::DO, token, while_ip));
                 }
                 else if ("end" == sym)
                 {
@@ -250,58 +249,58 @@ namespace black
                     if (op.Type == OpType::IF)
                     {
                         op.Data = static_cast<uint64_t>(ip + 1);
-                        result.push_back(Op::create_val<uint64_t>(OpType::END, ip + 1));
+                        result.push_back(Op::create_val<uint64_t>(OpType::END, token, ip + 1));
                     }
                     else if (op.Type == OpType::ELSE)
                     {
                         op.Data = static_cast<uint64_t>(ip + 1);
-                        result.push_back(Op::create_val<uint64_t>(OpType::END, ip + 1));
+                        result.push_back(Op::create_val<uint64_t>(OpType::END, token, ip + 1));
                     }
                     else if (op.Type == OpType::DO)
                     {
                         uint64_t do_ip = op.get_u64();
                         op.Data = static_cast<uint64_t>(ip + 1);
-                        result.push_back(Op::create_val<uint64_t>(OpType::END, do_ip));
+                        result.push_back(Op::create_val<uint64_t>(OpType::END, token, do_ip));
                     }
                     else 
                         throw std::runtime_error("Unexpected end begin");
                 }
                 else if ("dup" == sym)
-                    result.push_back(Op::create(OpType::DUP));
+                    result.push_back(Op::create(OpType::DUP, token));
                 else if ("over" == sym)
-                    result.push_back(Op::create(OpType::OVER));
+                    result.push_back(Op::create(OpType::OVER, token));
                 else if ("swap" == sym)
-                    result.push_back(Op::create(OpType::SWAP));
+                    result.push_back(Op::create(OpType::SWAP, token));
                 else if ("drop" == sym)
-                    result.push_back(Op::create(OpType::DROP));
+                    result.push_back(Op::create(OpType::DROP, token));
                 else if ("store" == sym || "S" == sym)
-                    result.push_back(Op::create(OpType::STORE));
+                    result.push_back(Op::create(OpType::STORE, token));
                 else if ("load" == sym || "L" == sym)
-                    result.push_back(Op::create(OpType::LOAD));
+                    result.push_back(Op::create(OpType::LOAD, token));
                 else if ("@" == sym)
-                    result.push_back(Op::create(OpType::MEM));
+                    result.push_back(Op::create(OpType::MEM, token));
                 //else if ("P" == sym)
-                //    result.push_back(Op::create_val<int8_t>(OpType::PUTS, true));
+                //    result.push_back(Op::create_val<int8_t>(OpType::PUTS, token, true));
                 //else if ("p" == sym)
-                //    result.push_back(Op::create_val<int8_t>(OpType::PUTS, false));
+                //    result.push_back(Op::create_val<int8_t>(OpType::PUTS, token, false));
                 else if ("syscall1" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 1));
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, token, 1));
                 else if ("syscall2" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 2));
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, token, 2));
                 else if ("syscall3" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 3));
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, token, 3));
                 else if ("syscall4" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 4));
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, token, 4));
                 else if ("syscall5" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 5));
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, token, 5));
                 else if ("syscall6" == sym)
-                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, 6));
+                    result.push_back(Op::create_val<int8_t>(OpType::SYSCALL, token, 6));
 				else if ("cast(ptr)" == sym)
-					result.push_back(Op::create_val<std::string>(OpType::CAST, "ptr"));
+					result.push_back(Op::create_val<std::string>(OpType::CAST, token, "ptr"));
 				else if ("cast(int)" == sym)
-					result.push_back(Op::create_val<std::string>(OpType::CAST, "int"));
+					result.push_back(Op::create_val<std::string>(OpType::CAST, token, "int"));
 				else if ("cast(bool)" == sym)
-					result.push_back(Op::create_val<std::string>(OpType::CAST, "bool"));
+					result.push_back(Op::create_val<std::string>(OpType::CAST, token, "bool"));
                 else
                     THROW_UNEXPECTED("Unexpected symbol: ", sym);
             }

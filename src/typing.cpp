@@ -319,11 +319,16 @@ namespace black
 		return {};
 	}
 
-	StaticTypingResult st_validate(const std::vector<Op>& code)
+	StaticTypingResult st_validate(const std::vector<Op>& code, const std::filesystem::path& filename)
 	{
 		StaticStack stack;
 		BranchStack branch_stack;
 
+        const char* C_RESET = "\033[0m";
+        const char* C_RED = "\033[91m";
+        const char* C_YELLOW = "\033[92m";
+        const char* C_AQUA = "\033[96m";
+        const char* C_LIME = "\033[92m";
 		std::stringstream sstr;
 		bool success = true;
 		size_t error_count = 0;
@@ -337,7 +342,8 @@ namespace black
 			{
 				if (error_count == 0)
 					sstr << "Operand stack mismatch.\n";
-				sstr << "\033[91mError:\033[0m\n\t" << result.value() << "\n";
+                const auto& loc = operand.OpToken.Loc;
+                sstr << loc.File << ":" << C_LIME << loc.Line << C_RESET << ":" << C_AQUA << loc.Column << C_RESET << ": " << C_RED << "Error:" << C_RESET << "\n\t" << result.value() << "\n";
 				success = false;
 				++error_count;
 			}
@@ -345,7 +351,7 @@ namespace black
 
 		if (stack.size() != 0)
 		{
-			sstr << "\033[91mError:\033[0m\n\tStack mismatch on program exit: " << stack.size() << "\n";
+            sstr << filename.string() << ":" << C_LIME << "1" << C_RESET << ":" << C_AQUA << "1" << C_RESET << ": " << C_RED << "Error:" << C_RESET << "\n\tStack mismatch on program exit: " << stack.size() << "\n";
 			success = false;
 			++error_count;
 		}

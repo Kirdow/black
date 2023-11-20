@@ -102,7 +102,7 @@ int main(int argc, char** argv)
 	if (is_validation)
 	{
 		if (is_verbose) std::cout << "-- Validating static typing" << std::endl;
-		auto result = black::st_validate(operands);
+		auto result = black::st_validate(operands, filename);
 		if (!result.IsOk())
 		{
 			std::cout << result.GetMessage() << "\033[91mValidation Failed\033[0m" << std::endl;

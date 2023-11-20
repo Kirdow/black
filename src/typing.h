@@ -1,5 +1,7 @@
 #include "token.h"
 
+#include <filesystem>
+
 namespace black
 {
 	enum class StaticTypingCode
@@ -33,5 +35,5 @@ namespace black
 		std::string m_Message;
 	};
 
-	StaticTypingResult st_validate(const std::vector<Op>& code);
+	StaticTypingResult st_validate(const std::vector<Op>& code, const std::filesystem::path& path);
 }

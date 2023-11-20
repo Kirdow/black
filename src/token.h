@@ -16,6 +16,13 @@ namespace black
         CHAR
     };
 
+    struct Location
+    {
+        std::string File;
+        uint32_t Line;
+        uint32_t Column;
+    };
+
     static inline const char* token_name(TokenType type)
     {
         switch (type)
@@ -68,6 +75,7 @@ namespace black
     struct Token : public ValueType
     {
         TokenType Type;
+        Location Loc;
 
         inline std::string to_str() const
         {
@@ -86,17 +94,18 @@ namespace black
             return sstr.str();
         }
 
-        static inline Token create(TokenType type)
+        static inline Token create(TokenType type, const Location& loc)
         {
             Token token;
             token.Type = type;
+            token.Loc = loc;
             return token;
         }
 
         template<typename T>
-        static inline Token create_val(TokenType type, const T& value)
+        static inline Token create_val(TokenType type, const Location& loc, const T& value)
         {
-            Token token = create(type);
+            Token token = create(type, loc);
             token.Data = value;
             return token;
         }
@@ -239,6 +248,7 @@ namespace black
     struct Op : public ValueType
     {
         OpType Type;
+        Token OpToken;
 
         inline std::string to_str() const
         {
@@ -301,17 +311,18 @@ namespace black
 			return sstr.str();
 		}
 
-        static inline Op create(OpType type)
+        static inline Op create(OpType type, const Token& token)
         {
             Op result;
             result.Type = type;
+            result.OpToken = token;
             return result;
         }
 
         template<typename T>
-        static inline Op create_val(OpType type, const T& value)
+        static inline Op create_val(OpType type, const Token& token, const T& value)
         {
-            Op result = create(type);
+            Op result = create(type, token);
             result.Data = value;
             return result;
         }
