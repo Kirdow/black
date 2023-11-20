@@ -4,19 +4,12 @@
     <img src="https://github.com/Kirdow/black/blob/master/res/logo480.png?raw=true" alt="Black" />
 </p>
 
-*Main repository can be found [here](https://github.com/Kirdow/black).*
-
 Stack based programming language made with C++17. Based on my previous project in Rust [Ktnack](https://github.com/Kirdow/Ktnack) which was based on [Tsoding/Porth](https://gitlab.com/tsoding/porth).
 
-## Building & Running
-You need CMake and GCC in order to build.<br>
-Running would need an OS based on Unix/Linux which uses Linux syscalls.
+## Project is Open Source
+This project is open source and can be found [here](https://github.com/Kirdow/black).
 
-Most of the compiling and running is done through `./run.sh`, you can edit it in order to check how it works.
-But generally you'd run a file (e.g. `test.bk` which is provided) using `./run.sh <filename.bk>`.
-
-You can also run tests found in `tests/` using `./test.sh`. This can be done by providing the test name,<br>
-without the extension and directory. If you wanted to run `tests/00-push-log.bk`, run `./test.sh 00-push-log`.
+Currently no contributions are accepted.
 
 ## References
 Inspired by [Porth](https://gitlab.com/tsoding/porth) by [Tsoding](https://www.youtube.com/@TsodingDaily).<br>
