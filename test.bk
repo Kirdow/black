@@ -1,3 +1,9 @@
 inc io
 
-42069 print(int)
+macro name_str 32 @ 0 + end
+
+"Enter your name: " p
+name_str r
+"Nice to meet you, " p name_str p "!" P
+"Hope you're doing great!" P
+

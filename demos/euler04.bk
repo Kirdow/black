@@ -6,7 +6,7 @@ inc core
 	100 while dup 1000 < do
 		2dup *
 		dup
-		while dup do
+		while dup 0 != do
 			dup 10 %
 			@ L64 10 * +
 			@ S64

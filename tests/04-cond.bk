@@ -1,18 +1,19 @@
 inc asserts
+assert:init()
 
 "Should only print true" P
 
-1 if
+true if
     "true" P
     0 +
 end
 
-0 if
+false if
     "false" P
     1 +
 end
 
-1 if
+true if
     "true" P
     0 +
 else
@@ -20,7 +21,7 @@ else
     1 +
 end
 
-0 if
+false if
     "false" P
     1 +
 else
@@ -28,4 +29,4 @@ else
     0 +
 end
 
-3 assert:log()
+3 assert:end()

@@ -7,16 +7,16 @@ macro @_assert @ 639999 + end
 // Value log prints `Expected` and `Result` after each test
 macro assert:vlog(unset) 1 @_assert S end
 macro assert:vlog(set) 0 @_assert S end
-macro assert:vlog() @_assert L end
+macro assert:vlog() @_assert L cast(bool) end
 
 // Store assert fail/success result
-macro assert ! + end
+macro assert ! cast(int) + end
 
 // Internal assert macro to log the expected value
 macro _assert
     assert:vlog() ! if
-        dup "Expected: " p .
-        over "Result: " p .
+        dup "Expected: " p cast(int) .
+        over "Result: " p cast(int) .
     end
 end
 
@@ -30,7 +30,7 @@ macro assert(>=) _assert >= assert end
 
 // Log amount of failed asserts
 macro assert:log(failed)
-    dup if
+    dup cast(bool) if
         "Failed tests: " p
         dup .
     end
@@ -39,7 +39,7 @@ end
 // Log amount of successful asserts
 macro assert:log(success)
     over -
-    dup if
+    dup cast(bool) if
         "Successful tasks: " p
         dup .
     end
@@ -52,3 +52,5 @@ macro assert:log()
     assert:log(success)
 end
 
+macro assert:init() 0 end
+macro assert:end() assert:log() drop end

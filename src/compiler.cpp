@@ -1,10 +1,7 @@
+#include "pch.h"
 #include "compiler.h"
 #include "token.h"
 #include "errors.h"
-
-#include <fstream>
-#include <iostream>
-#include <vector>
 
 namespace black
 {
@@ -86,6 +83,12 @@ namespace black
                     fs << "    push rax\n";
                     strs.push_back(str);
                 }
+				else if (op.is_value<bool>())
+				{
+					fs << "    ;; PUSH bool\n";
+					fs << "    mov rax, " << ((int)op.get_bool()) << "\n";
+					fs << "    push rax\n";
+				}
                 else
                     THROW_MESSAGE("Unexpected Push type");
                 break;
@@ -353,8 +356,12 @@ namespace black
                     if (sys_nr > 6)
                         std::cout << "WARNING: Unsupported Syscall Id: " << sys_nr << std::endl;
                     fs << "    syscall\n";
+					fs << "    push rax\n";
                     break;
                 }
+			case OpType::CAST:
+				fs << "    ;; CAST " << op.get_string() << "\n";
+				break;
             default:
                 std::cerr << "Unreachable OpType: " << op.to_str() << std::endl;
                 throw std::runtime_error("unreachable");

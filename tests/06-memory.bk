@@ -1,4 +1,5 @@
 inc asserts
+assert:init()
 
 "Store ABC in memory and print it" P
 65 @ 0 + S
@@ -18,3 +19,5 @@ inc asserts
 end
 drop
 @ 10 + L 45 assert(=)
+
+1 assert:end()

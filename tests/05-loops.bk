@@ -1,4 +1,5 @@
 inc asserts
+assert:init()
 
 "Add numbers from 0 to (including) 9" P
 
@@ -9,4 +10,4 @@ end
 drop
 45 assert(=)
 
-1 assert:log()
+1 assert:end()
